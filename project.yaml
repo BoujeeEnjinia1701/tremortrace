@@ -1,0 +1,17 @@
+# Card metadata consumed by https://amishchadha.com
+name: TremorTrace
+slug: tremortrace
+area: BioMedical
+status: concept          # concept | design | prototype | tested | released
+shortlisted: true
+pitch: >-
+  Wrist-worn IMU band that logs tremor frequency and amplitude continuously, with an open analysis notebook that produces a daily tremor profile.
+problem: >-
+  Tremor severity is scored during short clinic visits, which misses how it varies day to day.
+budget_usd: 150
+difficulty: 2  # 1 easiest, 5 hardest
+hero_image: media/hero.png
+licenses:
+  hardware: CERN-OHL-S-2.0
+  software: MIT
+tags: [biomedical, open-hardware, cern-ohl-s]
