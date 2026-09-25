@@ -52,3 +52,67 @@ At Amish's request, after a review of commits `15c42b7` and `5091eea`:
 
 Still awaiting Amish: approval of kit 1.3.1, whose forearm-for-scale rule for small objects replaces the 1.75 m person that `/populate` asks for, and confirmation of "OpenRatio" as a possible co-design partner.
 
+
+## Session 2026-09-25: TRL 3
+
+Authority: on 2026-09-25 Amish wrote "proceed with all of your recommendations across all batches. Make sure we don't proceed to TRL 4 on any of them." This session advanced TremorTrace from TRL 2 to TRL 3 and stopped there.
+
+### What was done
+
+- `docs/decisions/0001-trl2-review-decisions.md` (TRT-DDR-001 v0.1): the TRL 2 review decisions, and the items still open.
+- `docs/04-calcs/01-sizing.md` (TRT-CAL-001 v0.1) and `docs/04-calcs/sizing.py`: sampling, noise and range, a synthetic check of the 10 s window algorithm and the activity flag, power budget, storage, size and mass (read from the model), and cost (read from the BOM).
+- `cad/src/model.py`: parametric build123d model (pod base with integrated 22 mm lugs, gasket, lid, cell, module, charging connector, spring bars, strap). Exports `cad/step/tremortrace-{pod-assembly,on-strap,base,lid,gasket}.step` and `cad/stl/tremortrace-{pod-assembly,base,lid,gasket}.stl`.
+- `cad/src/sheets.py` and `cad/drawings/TRT-DWG-002.{svg,pdf,png}`: general arrangement at Rev P1, 2:1, marked "CONCEPT, NOT FOR FABRICATION" and "PRELIMINARY, NOT FOR FABRICATION".
+- `bom/bom.csv`: 11 lines, every line priced, $41.19 per band; `bom/bom-notes.md` updated.
+- `cad/src/concept_media.py` now builds the media from `model.py`; all media regenerated and inspected (hero, blueprint TRT-DWG-001, cutaway, exploded view with items 1 to 8, flow, `model.glb`).
+- TRT-REQ-001 v0.3, TRT-PRB-001 v0.3 and TRT-PRC-001 v0.4 updated for the decisions and the calculated numbers. The precis was already at v0.3, so it moved to v0.4 rather than 0.3.
+- `project.yaml`: `trl: 3`, `trl_target: 3`, evidence listed. `README.md`: TRL 3 badge and status.
+
+### Requirement status (TRT-CAL-001)
+
+Not met: none. At risk and not verifiable first:
+
+| ID | Status | Value |
+| --- | --- | --- |
+| R6 | At risk (mass); size met | 29.4 g against 30 g, strap assumed 12 g; pod 40 x 30 x 12 mm |
+| R7 | Not verifiable at TRL 3 | Gasketed pod; IP54 needs a test |
+| R8 | Not verifiable at TRL 3 | Summary record defined; notebook not written |
+| R1 | Met, conditional | 0.100 Hz bins; needs sample-rate correction against the 32.768 kHz crystal (up to 0.30 Hz error otherwise) |
+| R4 | Met, conditional | 6.3 days nominal, 4.5 days conservative; 0.69 days if the firmware never sleeps |
+| R5 | Met | 9.7 days; 6.4 days if the band logged 24 h per day |
+| R2, R3, R9, R10, R11 | Met | Noise floor 0.31 mg RMS; 104 Hz; local-first; $41.19; LED and web Bluetooth page |
+
+Corrections to TRL 2 numbers: the summary-to-raw ratio is 390, not about 1,000; firmware sits in the nRF52840's internal flash, so all 2 MB of external flash holds data; the mass estimate rose from 22 g to 29.4 g once the enclosure was modeled (7.0 g, not 5 g) and the cell mass taken from its listing (4.65 g).
+
+Finding: the simple activity flag (low-frequency power greater than tremor-band power) marks tremor during a reach as activity in synthetic data, which would undercount action tremor in essential tremor. The design now keeps tremor values in every record and stores the flag separately.
+
+### Decisions recorded (TRT-DDR-001)
+
+Decided by Amish, 2026-09-25, going with the recommendation: D1 single nRF52840 module with built-in IMU, no custom PCB; D2 summaries with optional raw snippets; D3 web Bluetooth page first; D4 most affected wrist first; D5 local-first data. No budget or pitch change was recommended, so `budget_usd` stays at 150 and the pitch is unchanged.
+
+### Still awaiting Amish
+
+1. First co-design and validation partner (clinic, patient association or OpenRatio network). No recommendation was made.
+2. Confirmation of OpenRatio as a possible partner.
+3. Approval of kit 1.3.1 (forearm-for-scale rule for small objects). No recommendation was stated.
+4. New: charge current 50 mA (recommended; 0.33 C, about 65 mW charger heat) or 100 mA.
+
+### Safety concerns
+
+- Not a medical device; every document says so.
+- LiPo cell against the skin: protected cell, never charge while worn, charge at or below the cell's 150 mA limit. The linear charger dissipates about 65 mW at 50 mA and 130 mW at 100 mA inside a sealed pod.
+- Tremor data is health data; the design has no cloud path.
+
+### Citations
+
+The TRL 2 note listed no unchecked citations. This session checked the LSM6DS3TR-C figures (ST product page and datasheet), the XIAO nRF52840 figures (Seeed wiki) and the Adafruit 1317 cell (product page) on the web and cites them in TRT-CAL-001, section 9. The XIAO unit price could not be confirmed and stays indicative. Values marked "assumed" in TRT-CAL-001 have no source.
+
+### TRL 4 material
+
+None found. `build-log/` holds only its README; `electronics/` and `firmware/` are empty.
+
+### Recommended next step
+
+TRL 4 is on hold by Amish's instruction; do not start it. Paper work that remains within TRL 3: decide the four open items above, and choose a lighter strap (textile, about 8 g) to restore mass margin under R6 if Amish agrees.
+
+For reference only, TRL 4 would need: a built band, a bench shaker test of frequency and amplitude against a reference sensor (R1, R2), a measured current profile (R4), a splash test (R7), the analysis notebook run on recorded data (R8), weighing (R6), a lab test report (TST with `environment: lab`) and build log entries.

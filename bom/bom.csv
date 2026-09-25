@@ -1,8 +1,12 @@
 item,qty,spec,supplier,unit_cost_usd,make_buy,notes
-1 Silicone watch strap,1,22 mm quick-release,Online retailer,6.00,buy,Indicative price
-2 Enclosure lid,1,"3D-printed PETG or resin, with LED light pipe",Self,1.00,make,Material cost only
-3 Controller and IMU module,1,"nRF52840 with 6-axis IMU, 2 MB flash, LiPo charger (Seeed XIAO nRF52840 Sense class)",Seeed Studio or distributor,16.00,buy,Indicative price; proposed choice awaiting Amish
-4 LiPo cell,1,"150 mAh 3.7 V protected, about 30 x 20 x 5 mm",Hobby electronics distributor,6.00,buy,Indicative price
-5 Enclosure base,1,"3D-printed PETG with TPU gasket",Self,1.00,make,Material cost only
-6 Magnetic pogo charging connector,1,2-pin pair with USB cable,Online retailer,5.00,buy,Indicative price
-7 Hardware and consumables,1,"M2 screws, wire, adhesive",Self,3.00,buy,Indicative price
+1 Silicone watch strap,1,"22 mm quick-release, skin-safe silicone, about 12 g",Online retailer (watch straps),8.00,buy,Indicative price; quick-release bars fit the 22 mm lugs
+2 Enclosure lid,1,"3D-printed PETG, 30 x 40 x 1.5 mm, 2 screw holes, 2 mm light pipe bore",Self (FDM printer),0.50,make,"Material about 2.3 g; price includes failed-print allowance"
+3 Controller and IMU module,1,"Seeed Studio XIAO nRF52840 Sense: nRF52840, LSM6DS3TR-C IMU, 2 MB QSPI flash, BQ25101 charger",Seeed Studio or distributor,15.99,buy,Indicative list price; confirm at order. Decided by Amish 2026-09-25 (TRT-DDR-001)
+4 LiPo cell,1,"150 mAh 3.7 V protected, 19.75 x 26.02 x 3.8 mm, 4.65 g, JST-PH lead",Adafruit (product 1317) or distributor,5.95,buy,Price and size from the Adafruit listing checked 2026-09-25; charge at 150 mA or less
+5 Enclosure base,1,"3D-printed PETG, 30 x 40 x 10 mm, integrated 22 mm lugs",Self (FDM printer),0.50,make,"Material about 4.6 g; price includes failed-print allowance"
+6 Magnetic pogo charging connector,1,"2-pin magnetic receptacle (about 4 x 8 x 3 mm) with USB cable",Online retailer (electronics),6.00,buy,Indicative price
+7 Gasket,1,"3D-printed TPU 95A perimeter ring, 0.5 mm compressed",Self (FDM printer),0.25,make,Material cost only
+8 Spring bars,1,"Pair, 22 mm, 1.5 mm diameter, spare set",Watch parts supplier,1.00,buy,Indicative price
+9 Lid screws,2,"M2 x 6 thread-forming for plastics, stainless",Fastener supplier,0.25,buy,Indicative price
+10 Light pipe,1,"2 mm clear acrylic rod, 2 mm long",Plastics or electronics supplier,0.50,buy,Indicative price
+11 Consumables,1,"Foam pad, polyimide tape, silicone wire, heat shrink, adhesive",Electronics supplier,2.00,buy,Indicative allowance

@@ -1,8 +1,8 @@
 # TremorTrace
 
-![TRL 2](https://img.shields.io/badge/TRL-2%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
+![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
 
-**Area:** BioMedical · **TRL:** 2 of 9 (concept formulated) · **Prototype budget:** about $150 USD · **Difficulty:** 2 of 5
+**Area:** BioMedical · **TRL:** 3 of 9 (proof of concept by calculation) · **Prototype budget:** about $150 USD · **Difficulty:** 2 of 5
 
 Wrist-worn IMU band that logs tremor frequency and amplitude continuously, with an open analysis notebook that produces a daily tremor profile.
 
@@ -22,13 +22,16 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
 ## Key components
 
-- 6-axis IMU
-- nRF52 BLE module
-- LiPo cell
-- Printed enclosure
-- Silicone strap
+- Seeed XIAO nRF52840 Sense class module (nRF52840 BLE, 6-axis IMU, 2 MB flash, charger)
+- 150 mAh protected LiPo cell
+- Printed PETG enclosure with TPU gasket, 40 x 30 x 12 mm
+- 22 mm silicone strap
 
-The working bill of materials is in [bom/bom.csv](bom/bom.csv).
+The priced bill of materials ($41.19 in parts) is in [bom/bom.csv](bom/bom.csv).
+
+## Status at TRL 3
+
+Calculations in [TRT-CAL-001](docs/04-calcs/01-sizing.md) show 0.1 Hz frequency resolution, 4.5 to 6.3 days per charge and 9.7 days of on-band history. Mass is at risk at 29.4 g against a 30 g limit. The parametric model is [cad/src/model.py](cad/src/model.py) and the general arrangement is [TRT-DWG-002](cad/drawings/TRT-DWG-002.pdf). TRL 4 work is on hold.
 
 ## Safety
 
