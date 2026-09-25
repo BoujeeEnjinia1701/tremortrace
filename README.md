@@ -6,6 +6,10 @@
 
 Wrist-worn IMU band that logs tremor frequency and amplitude continuously, with an open analysis notebook that produces a daily tremor profile.
 
+![TremorTrace concept](media/hero.png)
+
+[Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [Review note](docs/REVIEW.md)
+
 ## Problem
 
 Tremor severity is scored during short clinic visits, which misses how it varies day to day.

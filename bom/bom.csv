@@ -1,6 +1,8 @@
 item,qty,spec,supplier,unit_cost_usd,make_buy,notes
-6-axis IMU,,,,,,
-nRF52 BLE module,,,,,,
-LiPo cell,,,,,,
-Printed enclosure,,,,,,
-Silicone strap,,,,,,
+1 Silicone watch strap,1,22 mm quick-release,Online retailer,6.00,buy,Indicative price
+2 Enclosure lid,1,"3D-printed PETG or resin, with LED light pipe",Self,1.00,make,Material cost only
+3 Controller and IMU module,1,"nRF52840 with 6-axis IMU, 2 MB flash, LiPo charger (Seeed XIAO nRF52840 Sense class)",Seeed Studio or distributor,16.00,buy,Indicative price; proposed choice awaiting Amish
+4 LiPo cell,1,"150 mAh 3.7 V protected, about 30 x 20 x 5 mm",Hobby electronics distributor,6.00,buy,Indicative price
+5 Enclosure base,1,"3D-printed PETG with TPU gasket",Self,1.00,make,Material cost only
+6 Magnetic pogo charging connector,1,2-pin pair with USB cable,Online retailer,5.00,buy,Indicative price
+7 Hardware and consumables,1,"M2 screws, wire, adhesive",Self,3.00,buy,Indicative price
