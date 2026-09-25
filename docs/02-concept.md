@@ -3,7 +3,7 @@ doc_id: TRT-PRC-001
 title: TremorTrace design precis
 project: TremorTrace
 doc_type: Design precis
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-09-24'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
   date: '2026-09-24'
   author: Amish Chadha
   change: Populate to TRL 2 (architecture, first-order numbers, safety, media)
+- version: "0.3"
+  date: '2026-09-24'
+  author: Amish Chadha
+  change: 'Review fixes: one-module and local-first choices marked proposed; massing pod closed at 12 mm; concept sheet renumbered TRT-DWG-001'
 ---
 
 # TremorTrace design precis
@@ -66,8 +70,8 @@ All values are estimates for concept review and will be checked at TRL 3.
 ## Key design choices
 
 - **Summaries, not raw data.** Storing 10-second summaries instead of raw samples cuts storage by about 1,000 times and keeps personal data minimal. Short raw snippets can be captured on demand for research. Proposed, awaiting Amish.
-- **One module, no custom PCB.** Keeps the first build within reach of anyone with a soldering iron and a 3D printer.
-- **Local-first data.** No cloud account is needed to use or analyze the data (R9).
+- **One module, no custom PCB.** Keeps the first build within reach of anyone with a soldering iron and a 3D printer. Proposed, awaiting Amish.
+- **Local-first data.** No cloud account is needed to use or analyze the data (R9). Proposed, awaiting Amish.
 
 ![Exploded view](../media/exploded.png)
 

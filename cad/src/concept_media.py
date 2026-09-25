@@ -15,10 +15,12 @@ STRAP_W, STRAP_T = 22.0, 2.5
 top = WRIST_R + STRAP_T      # outer face of the strap at the top of the wrist
 
 strap = Rot(0, 90, 0) * (Cylinder(WRIST_R + STRAP_T, STRAP_W) - Cylinder(WRIST_R, STRAP_W + 1))
-base = Pos(0, 0, top + 2.0) * (Box(POD_L, POD_W, 4.0) - Pos(0, 0, 1.0) * Box(POD_L - 3, POD_W - 3, 4.0))
-battery = Pos(0, 0, top + 4.0) * Box(20.0, 30.0, 5.0)
-module = Pos(0, 0, top + 8.5) * Box(18.0, 21.0, 3.5)
-lid = Pos(0, 0, top + 12.0) * (Box(POD_L, POD_W, 3.0) - Pos(0, 0, -1.0) * Box(POD_L - 3, POD_W - 3, 2.0))
+POD_H, LID_T, FLOOR = 12.0, 1.5, 1.0   # overall pod height; the base walls enclose cell and module
+BASE_H = POD_H - LID_T
+base = Pos(0, 0, top + BASE_H / 2) * (Box(POD_L, POD_W, BASE_H) - Pos(0, 0, FLOOR) * Box(POD_L - 3, POD_W - 3, BASE_H))
+battery = Pos(0, 0, top + FLOOR + 2.5) * Box(20.0, 30.0, 5.0)           # floor + 5.0 mm cell
+module = Pos(0, 0, top + FLOOR + 5.3 + 1.75) * Box(18.0, 21.0, 3.5)     # 0.3 mm foam, then 3.5 mm module
+lid = Pos(0, 0, top + BASE_H + LID_T / 2) * Box(POD_L, POD_W, LID_T)
 contacts = Pos(0, POD_W / 2 - 6, top - 0.5) * Box(8.0, 4.0, 1.5)
 
 parts = [
@@ -34,7 +36,7 @@ hand = Pos(88, 0, -4) * Box(62, 70, 24)
 context = [Part("Forearm and hand", forearm + hand, "#C8CDD3")]
 
 render_all(
-    parts, project="TremorTrace", title="Wrist pod concept", dwg_no="TRT-DWG-010",
+    parts, project="TremorTrace", title="Wrist pod concept", dwg_no="TRT-DWG-001",
     key_figures=["6-axis IMU at 104 Hz, 3 to 15 Hz band", "10 s tremor summaries on the band",
                  "About 4 days per charge (estimate)", "About 22 g with strap (estimate)",
                  "About $40 in parts (indicative)"],

@@ -41,3 +41,14 @@ No requirement is known to be missed. R4 depends on IMU current in the chosen mo
 ### Recommended next step
 
 Review this note and the media. If approved, run `/advance-trl3` to verify the power budget, frequency analysis and activity flag by calculation and produce the parametric model and drawing sheet.
+
+## Session 2026-09-24: review fixes
+
+At Amish's request, after a review of commits `15c42b7` and `5091eea`:
+
+- `cad/src/concept_media.py`: the massing pod had no side walls between base and lid, and stacked to 13.5 mm against the 12 mm in TRT-PRC-001. The base walls now enclose the cell and module, and the pod is 12.0 mm overall. All media regenerated.
+- The concept sheet is renumbered TRT-DWG-001 (it was TRT-DWG-010); drawing numbers start at 001 (`.kit/STANDARDS.md`, section 1).
+- TRT-PRC-001 v0.3: "One module, no custom PCB" and "Local-first data" are now marked "Proposed, awaiting Amish", as `CLAUDE.md` section 2 requires.
+
+Still awaiting Amish: approval of kit 1.3.1, whose forearm-for-scale rule for small objects replaces the 1.75 m person that `/populate` asks for, and confirmation of "OpenRatio" as a possible co-design partner.
+
