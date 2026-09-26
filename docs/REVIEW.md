@@ -166,3 +166,8 @@ Unchanged: not a medical device; protected LiPo cell, never charged while worn, 
 ### TRL 4
 
 TRL 4 remains on hold by Amish's instruction. Nothing was built, bought, tested or programmed. `trl: 3` and `trl_target: 3` are unchanged.
+
+## Session 2026-09-26: sources strengthened
+
+- `README.md`, "Where it could be used", India row: the row had no citation. It now cites the ICMR, PHFI and IHME release of 14 July 2021 on the India State-Level Disease Burden Initiative study of neurological disorders (1990 to 2019), which reports that the burden of non-communicable neurological disorders, including Parkinson's disease, is rising mainly through population ageing and calls for addressing the shortage of trained neurology workforce. The unsourced claim that specialist care is concentrated in cities was removed.
+- All other links in the four README source sections were re-fetched and confirmed (WHO, Louis and Ferreira 2010, WFN 2017, Commonwealth Fund 2016, Qi et al. 2021, Löhle et al. 2022, which also confirms the Hauser et al. 2000 diary). The inspiration (Hauser home diary) is unchanged. No controlled documents changed.

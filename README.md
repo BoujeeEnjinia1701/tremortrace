@@ -42,7 +42,7 @@ The specialists who judge tremor are scarce and unevenly spread. The WHO and Wor
 | United States | Clinical trials have long used half-hourly home diaries to count daily motor states ([Hauser et al., 2000](https://pubmed.ncbi.nlm.nih.gov/10803796/)); an open sensor record gives researchers a comparison |
 | China | A community survey found Parkinson's prevalence of 1.37 % above age 60, about 3.62 million people ([Qi et al., Movement Disorders, 2021](https://movementdisorders.onlinelibrary.wiley.com/doi/10.1002/mds.28762)) |
 | Sub-Saharan Africa | The WHO African region reported about 0.1 neurologists per 100,000 people ([WFN, 2017](https://wfneurology.org/2017-09-18-wcn-press-release-neurology-atlas)); a low-cost local record can support the few specialist reviews available |
-| India | Large and ageing population with specialist care concentrated in cities; a band built from widely sold modules suits university and community research groups |
+| India | The burden of non-communicable neurological disorders, Parkinson's disease among them, is rising mainly because the population is ageing, and the national study calls for addressing a shortage of trained neurologists ([ICMR, PHFI and IHME, 2021](https://www.icmr.gov.in/icmrobject/custom_data/1702892885_press_release_gbd_india_neurological_disorders_14072021.pdf)); a band built from widely sold modules suits university and community research groups |
 
 ## What sparked the idea
 
@@ -92,6 +92,12 @@ Calculations in [TRT-CAL-001](docs/04-calcs/01-sizing.md) show 0.1 Hz frequency 
 ## Documentation
 
 Controlled documents follow the portfolio [documentation standard](.kit/STANDARDS.md). Each carries a document ID (TRT-PRC-001 for the precis), a version and a revision history. Branded PDFs are built with `python .kit/render.py` and attached to GitHub Releases when a document is tagged, for example `TRT-PRC-001/v1.0`.
+
+## Credits
+
+Designed by Amish Chadha. See [CONTRIBUTORS.md](CONTRIBUTORS.md) for roles. To cite this design, use [CITATION.cff](CITATION.cff) (GitHub shows it as "Cite this repository").
+
+AI assistance (Claude) was used to accelerate concept renders, prototype documentation and first-pass sizing calculations. Design direction and all decisions are Amish Chadha's, recorded in this repository's decision records (`docs/decisions/`).
 
 ## Licenses
 
