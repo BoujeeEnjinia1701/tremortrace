@@ -1,7 +1,7 @@
 """TremorTrace drawing sheets.
 
 Run from the repo root:  python cad/src/sheets.py
-Builds TRT-DWG-002 (general arrangement, Rev P1) in cad/drawings/ from cad/src/model.py.
+Builds TRT-DWG-002 (general arrangement, Rev P2) in cad/drawings/ from cad/src/model.py.
 TRT-DWG-001 is the concept sheet made by cad/src/concept_media.py.
 """
 import shutil
@@ -19,10 +19,11 @@ pod = model.build()
 work = ROOT / "cad" / "drawings" / "_views"
 views = project_views(pod, work)
 
-s = Sheet(project="TremorTrace", title="Wrist pod general arrangement", dwg_no="TRT-DWG-002", rev="P1",
+s = Sheet(project="TremorTrace", title="Wrist pod general arrangement", dwg_no="TRT-DWG-002", rev="P2",
           author="Amish Chadha", date="2026-09-25", scale=2.0, concept=True,
           material="Base and lid PETG, gasket TPU 95A; bought parts per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
-          revisions=[("P1", "General arrangement for TRL 3 (TRT-CAL-001)", "2026-09-25", "AC")])
+          revisions=[("P1", "General arrangement for TRL 3 (TRT-CAL-001)", "2026-09-25", "AC"),
+                     ("P2", "Textile strap, charge at 50 mA (TRT-DDR-002)", "2026-09-25", "AC")])
 s.add_ortho(views, ["front", "top", "right"])
 s.add_svg(views["iso"], 276, 32, 140, 78, label="Isometric view", sublabel="Not to scale; strap omitted")
 cx, cy, cz = p["cell"]
@@ -39,7 +40,7 @@ s.add_notes("Main dimensions (mm)", [
     f"Charging opening {p['pogo'][0]:.0f} x {p['pogo'][1]:.0f} in floor; LED bore {p['led_d']:.0f} dia",
 ], x=276, y=124, width=140)
 s.add_notes("Parts list (items match bom/bom.csv)", [
-    "1 Silicone strap, 22 mm (not shown)",
+    "1 Textile strap, 22 mm (not shown)",
     "2 Enclosure lid, PETG",
     "3 Controller and IMU module (XIAO class)",
     "4 LiPo cell, 150 mAh protected",
@@ -52,7 +53,8 @@ s.add_notes("Parts list, continued", [
     "9 Lid screws, 2 x M2 x 6",
     "10 Light pipe, 2 mm",
     "11 Consumables",
-    "Not a medical device. Never charge while worn.",
+    "Charge at 50 mA. Never charge while worn.",
+    "Not a medical device.",
 ], x=124, y=222, width=100)
 s.save(ROOT / "cad" / "drawings" / "TRT-DWG-002")
 shutil.rmtree(work, ignore_errors=True)

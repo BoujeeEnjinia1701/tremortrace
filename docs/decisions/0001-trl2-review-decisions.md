@@ -3,7 +3,7 @@ doc_id: TRT-DDR-001
 title: TremorTrace TRL 2 review decisions
 project: TremorTrace
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -13,12 +13,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Record Amish's 2026-09-25 decisions on the TRL 2 review points
+- version: "0.2"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002)
 ---
 
 # 0001: TRL 2 review decisions
 
 - **Date:** 2026-09-25
-- **Status:** accepted (items D1 to D5); items O1 to O3 remain proposed
+- **Status:** accepted (items D1 to D5, and O4 through TRT-DDR-002); items O1 to O3 remain proposed
 
 ## Context
 
@@ -54,7 +58,7 @@ Items that remain open (no recommendation was made, so they stay "Proposed, awai
 
 New item raised at TRL 3 (not part of the 2026-09-25 decision):
 
-- **O4.** Charge current: the 50 mA setting (0.33 C, about 3.6 h, about 65 mW charger heat) or the 100 mA setting (0.67 C, about 1.8 h, about 130 mW). Recommendation: 50 mA, to keep the pod cool. Proposed, awaiting Amish.
+- **O4.** Charge current: the 50 mA setting (0.33 C, about 3.6 h, about 65 mW charger heat) or the 100 mA setting (0.67 C, about 1.8 h, about 130 mW). Recommendation: 50 mA, to keep the pod cool. Decided by Amish, 2026-09-25: go with recommendation (TRT-DDR-002).
 
 ## Consequences
 

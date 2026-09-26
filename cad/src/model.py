@@ -40,7 +40,7 @@ PARAMS = {
     "screw_len": 6.0,
     # Context
     "wrist_r": 32.0,          # wrist radius used for the strap loop
-    "strap_t": 2.5,
+    "strap_t": 1.4,           # woven textile quick-release strap, about 8 g (DDR-002 D7; was 2.5 mm silicone)
 }
 
 

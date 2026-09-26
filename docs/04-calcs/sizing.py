@@ -51,12 +51,12 @@ FLASH_B = 2 * 1024 * 1024     # 2 MB QSPI flash on the module; firmware lives in
 RAW_RESERVE_B = 256 * 1024    # reserved for on-demand raw snippets (decided: summaries plus optional raw)
 FS_OVERHEAD = 0.03            # sector headers and wear levelling in a simple log store
 
-CHARGE_MA = (50.0, 100.0)     # BQ25101 charge current settings on the module (Seeed wiki)
+CHARGE_MA = (50.0, 100.0)     # BQ25101 charge current settings on the module (Seeed wiki); 50 mA decided (TRT-DDR-002)
 CELL_MAX_CHARGE_MA = 150.0    # Adafruit 1317 limit
 
 DENS = {"PETG": 1.27, "TPU": 1.21}   # g/cm3
 MASS_BOUGHT_G = {                    # g
-    "Silicone strap, 22 mm (assumed)": 12.0,
+    "Textile strap, 22 mm (assumed)": 8.0,
     "Controller and IMU module (assumed)": 3.0,
     "LiPo cell, 150 mAh (Adafruit 1317)": 4.65,
     "Charging connector receptacle (assumed)": 1.0,
@@ -202,7 +202,8 @@ for k, v in {**m_print, **MASS_BOUGHT_G}.items():
     total += v
     print(f"  {k:42s} {v:5.2f} g")
 print(f"Total mass {total:.1f} g (limit 30 g); margin {30-total:.1f} g")
-print(f"With a 15 g strap: {total-12+15:.1f} g; with an 8 g textile strap: {total-12+8:.1f} g")
+print(f"With a 12 g silicone strap (TRL 3 baseline, replaced per TRT-DDR-002): {total-8+12:.1f} g; "
+      f"with a 10 g textile strap: {total-8+10:.1f} g")
 
 # ---------------------------------------------------------------- R10: cost
 hr("R10: cost (bom/bom.csv)")

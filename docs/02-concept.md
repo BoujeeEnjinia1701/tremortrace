@@ -3,7 +3,7 @@ doc_id: TRT-PRC-001
 title: TremorTrace design precis
 project: TremorTrace
 doc_type: Design precis
-version: "0.4"
+version: "0.5"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -25,11 +25,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: 'TRL 3: decisions from TRT-DDR-001 recorded; numbers from TRT-CAL-001 (storage ratio 390, not 1,000; firmware in internal flash; mass 29.4 g); parametric model and TRT-DWG-002'
+- version: "0.5"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002)
 ---
 
 # TremorTrace design precis
 
-TremorTrace is a small wrist pod on a watch strap that records wrist motion all day, turns it into 10-second tremor summaries on the band, and hands them to an open notebook that draws a daily tremor profile. The TRL 3 calculations (TRT-CAL-001) show that one off-the-shelf module and a 150 mAh cell meet nine of eleven requirements for $41.19 in parts; mass is at risk at 29.4 g against a 30 g limit, and splash resistance and the notebook can only be verified with hardware and software work.
+TremorTrace is a small wrist pod on a watch strap that records wrist motion all day, turns it into 10-second tremor summaries on the band, and hands them to an open notebook that draws a daily tremor profile. The TRL 3 calculations (TRT-CAL-001) show that one off-the-shelf module and a 150 mAh cell meet nine of eleven requirements for $43.19 in parts, including mass at 25.4 g against a 30 g limit with a textile strap; splash resistance and the notebook can only be verified with hardware and software work.
 
 ![Hero render](../media/hero.png)
 
@@ -49,7 +53,7 @@ Table 1. Main components; item numbers match `bom/bom.csv` and the exploded view
 
 | # | Component | Choice | Notes |
 | --- | --- | --- | --- |
-| 1 | Strap | 22 mm silicone quick-release watch strap | Skin-safe; the heaviest part (about 12 g, assumed) |
+| 1 | Strap | 22 mm woven textile two-piece quick-release strap | Skin-safe and washable; the heaviest part (about 8 g, assumed). Replaced the 12 g silicone strap; decided by Amish, 2026-09-25 (TRT-DDR-002) |
 | 2 | Enclosure lid | 3D-printed PETG, 1.5 mm, two M2 screws | 2 mm light pipe over the module's status LED |
 | 3 | Controller and IMU | Seeed XIAO nRF52840 Sense class: nRF52840, LSM6DS3TR-C IMU, 2 MB flash, BQ25101 charger | One module, no custom PCB. Decided by Amish, 2026-09-25 (TRT-DDR-001) |
 | 4 | Battery | 150 mAh protected LiPo, 19.75 x 26.02 x 3.8 mm (Adafruit 1317 class) | See power budget |
@@ -76,8 +80,8 @@ Table 2. Key numbers at TRL 3.
 | Summary storage | 184.3 kB per day (32 bytes per 10 s, 16 h) | |
 | On-band history | 9.7 days | R5 (7 days) met |
 | Pod size | 40 x 30 x 12 mm | R6 size met |
-| Mass | 29.4 g with strap | R6 (30 g) at risk |
-| Parts cost | $41.19 | R10 met |
+| Mass | 25.4 g with textile strap | R6 (30 g) met, 4.6 g margin |
+| Parts cost | $43.19 | R10 met |
 
 The general arrangement is drawing TRT-DWG-002 (`cad/drawings/TRT-DWG-002.pdf`).
 
@@ -88,7 +92,8 @@ The general arrangement is drawing TRT-DWG-002 (`cad/drawings/TRT-DWG-002.pdf`).
 - **Web Bluetooth page first.** No app store and no account; a native app may follow. Decided by Amish, 2026-09-25 (TRT-DDR-001).
 - **Local-first data.** No cloud account is needed to use or analyze the data (R9). Decided by Amish, 2026-09-25 (TRT-DDR-001).
 - **Most affected wrist first.** Decided by Amish, 2026-09-25 (TRT-DDR-001).
-- **Charge current 50 mA.** Charges in about 3.6 h with about 65 mW of charger heat, against 1.8 h and 130 mW at 100 mA. Proposed, awaiting Amish.
+- **Charge current 50 mA.** Charges in about 3.6 h with about 65 mW of charger heat, against 1.8 h and 130 mW at 100 mA. The firmware selects the 50 mA setting. Decided by Amish, 2026-09-25 (TRT-DDR-002).
+- **Textile strap.** A woven textile strap of about 8 g replaces the 12 g silicone strap and raises the R6 mass margin from 0.6 g to 4.6 g. Decided by Amish, 2026-09-25 (TRT-DDR-002).
 
 ## Safety
 
@@ -101,7 +106,7 @@ The general arrangement is drawing TRT-DWG-002 (`cad/drawings/TRT-DWG-002.pdf`).
 ## Open questions
 
 - The activity flag marks tremor during a reach as activity in synthetic data (TRT-CAL-001, section 4). How well can action tremor be separated from voluntary movement with 10 s summaries?
-- Confirm the IMU sample-rate tolerance, the module's run current and the strap mass.
+- Confirm the IMU sample-rate tolerance, the module's run current and the textile strap mass.
 - First clinical or patient partner for co-design and eventual validation. Proposed, awaiting Amish.
 
 Concept media: [blueprint sheet](../media/concept-blueprint.pdf), [interactive 3D model](../media/viewer.html).

@@ -3,7 +3,7 @@ doc_id: TRT-CAL-001
 title: TremorTrace sizing calculations
 project: TremorTrace
 doc_type: Calculation note
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -13,11 +13,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: First-principles sizing for TRL 3 against TRT-REQ-001 v0.3
+- version: "0.2"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002)
 ---
 
 # TremorTrace sizing calculations
 
-The design meets nine of the eleven requirements in TRT-REQ-001 by calculation or design review, has one at risk (R6 mass, 29.4 g against 30 g) and two that cannot be verified at TRL 3 (R7 splash resistance and R8 daily profile notebook). No requirement is shown to be not met. Two conditions carry the result: the firmware must measure the IMU's true sample rate against the module's crystal (R1), and it must sleep between samples (R4).
+The design meets nine of the eleven requirements in TRT-REQ-001 by calculation or design review and two cannot be verified at TRL 3 (R7 splash resistance and R8 daily profile notebook). R6 mass, at risk in v0.1 at 29.4 g, is met at 25.4 g after the textile strap adopted in TRT-DDR-002. No requirement is shown to be not met. Two conditions carry the result: the firmware must measure the IMU's true sample rate against the module's crystal (R1), and it must sleep between samples (R4).
 
 Every number in this note is printed by `docs/04-calcs/sizing.py` (run `python docs/04-calcs/sizing.py` from the repo root). Size and mass read the geometry directly from `cad/src/model.py`; cost reads `bom/bom.csv`.
 
@@ -31,16 +35,16 @@ Table 1. Requirement status at TRL 3.
 
 | ID | Target | Value from this note | Status |
 | --- | --- | --- | --- |
-| R6 | Mass 30 g or less with strap; pod within 45 x 35 x 14 mm | 29.4 g (0.6 g margin, strap mass assumed 12 g); pod 40 x 30 x 12 mm | At risk (mass); size met |
 | R7 | Silicone or textile strap, no exposed electronics, IP54 target | Sealed PETG pod with TPU gasket, contacts through the floor; no ingress test possible on paper | Not verifiable at TRL 3 |
 | R8 | Open notebook producing a daily profile | Summary record defined (Table 4); notebook not yet written | Not verifiable at TRL 3 |
 | R1 | 3 to 15 Hz band, resolution 0.2 Hz or better | 0.100 Hz bins, 52 Hz Nyquist; synthetic worst error 0.002 Hz | Met, if the sample rate is corrected against the crystal |
+| R6 | Mass 30 g or less with strap; pod within 45 x 35 x 14 mm | 25.4 g (4.6 g margin, textile strap mass assumed 8 g); pod 40 x 30 x 12 mm | Met |
 | R2 | Acceleration and angular velocity RMS in band, per window | Noise floor 0.31 mg and 0.017 dps RMS in band; ranges +/-8 g and +/-2000 dps; synthetic amplitude error 0.6 % or less | Met |
 | R3 | 6-axis IMU at 100 Hz or more | LSM6DS3TR-C at 104 Hz | Met |
 | R4 | 3 days or more at 16 h of wear per day | 6.3 days nominal, 4.5 days conservative | Met, if the firmware sleeps (0.69 days if it never sleeps) |
 | R5 | 7 days of summaries at 16 h per day, with raw snippet reserve | 9.7 days after a 256 kB raw reserve | Met (6.4 days if the band logs 24 h per day) |
 | R9 | Local storage, owner-controlled export, no cloud | Architecture has no cloud path; web Bluetooth page reads locally | Met (design review) |
-| R10 | Parts $150 or less, no custom PCB | $41.19 over 11 BOM lines; module plus hand wiring | Met |
+| R10 | Parts $150 or less, no custom PCB | $43.19 over 11 BOM lines; module plus hand wiring | Met |
 | R11 | LED and web Bluetooth page show battery, recording and sync state | RGB LED on the module under a 2 mm light pipe; page defined in TRT-PRC-001 | Met (design review) |
 
 ## 2. Sampling and frequency resolution (R1, R3)
@@ -96,7 +100,7 @@ Table 3. Recording current, mA.
 
 Daily use is 18.4 mAh nominal and 25.2 mAh conservative (including a daily sync of 184 kB at an assumed 10 kB/s and 5 mA), so one charge lasts 6.3 days nominal and 4.5 days conservative. R4 is met in both cases. Firmware that never lets the CPU sleep draws 166 mAh per day and lasts 0.69 days, which fails R4; sleep discipline is a firmware requirement, not an option.
 
-Charging: the module's BQ25101 charger has 50 mA and 100 mA settings. At 50 mA the cell charges at 0.33 C in about 3.6 h, and the linear charger dissipates about 65 mW. At 100 mA it charges at 0.67 C in about 1.8 h and dissipates about 130 mW. Both are under the cell's 150 mA limit. This note uses the 50 mA setting to keep the pod cool; it is proposed, awaiting Amish.
+Charging: the module's BQ25101 charger has 50 mA and 100 mA settings. At 50 mA the cell charges at 0.33 C in about 3.6 h, and the linear charger dissipates about 65 mW. At 100 mA it charges at 0.67 C in about 1.8 h and dissipates about 130 mW. Both are under the cell's 150 mA limit. This note uses the 50 mA setting to keep the pod cool; decided by Amish, 2026-09-25 (TRT-DDR-002). The firmware must select the 50 mA setting.
 
 ## 6. Storage (R5)
 
@@ -134,20 +138,20 @@ Table 5. Mass estimate.
 | Enclosure base, PETG | 4.56 | Model volume at 1.27 g/cm³ |
 | Enclosure lid, PETG | 2.25 | Model volume at 1.27 g/cm³ |
 | Gasket, TPU | 0.23 | Model volume at 1.21 g/cm³ |
-| Silicone strap, 22 mm | 12.00 | Assumed |
+| Textile strap, 22 mm | 8.00 | Assumed |
 | Controller and IMU module | 3.00 | Assumed |
 | LiPo cell, 150 mAh | 4.65 | Adafruit 1317 listing |
 | Charging connector receptacle | 1.00 | Assumed |
 | Spring bars, 2 | 0.60 | Assumed |
 | M2 screws, 2 | 0.30 | Assumed |
 | Wire, foam pad, light pipe | 0.80 | Assumed |
-| **Total** | **29.4** | |
+| **Total** | **25.4** | |
 
-The total is 0.6 g under the limit, and the strap is the largest and least certain item. A 15 g strap takes the band to 32.4 g (not met); an 8 g textile strap brings it to 25.4 g. R6 is therefore at risk. The first TRL 2 estimate (22 g) assumed a 5 g enclosure and a 10 g strap; the model shows the enclosure at 7.0 g.
+The total is 4.6 g under the limit, so R6 is met. The strap is still the largest and least certain item: v0.1 of this note used a 12 g silicone strap, which gave 29.4 g and only 0.6 g of margin, so TRT-DDR-002 replaced it with a woven textile strap of about 8 g. A heavier 10 g textile strap would still give 27.4 g. The first TRL 2 estimate (22 g) assumed a 5 g enclosure and a 10 g strap; the model shows the enclosure at 7.0 g.
 
 ## 8. Cost (R10)
 
-`bom/bom.csv` has 11 priced lines totaling $41.19 per band, well under the $150 budget, which also covers printing, tools and spares. The cell price and size were checked against the Adafruit listing on 2026-09-25; the other prices are indicative and are confirmed at order.
+`bom/bom.csv` has 11 priced lines totaling $43.19 per band (the textile strap is priced at $10.00 against $8.00 for the silicone strap in v0.1), well under the $150 budget, which also covers printing, tools and spares. The cell price and size were checked against the Adafruit listing on 2026-09-25; the other prices are indicative and are confirmed at order.
 
 ## 9. Sources
 

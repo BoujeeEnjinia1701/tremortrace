@@ -1,5 +1,5 @@
 item,qty,spec,supplier,unit_cost_usd,make_buy,notes
-1 Silicone watch strap,1,"22 mm quick-release, skin-safe silicone, about 12 g",Online retailer (watch straps),8.00,buy,Indicative price; quick-release bars fit the 22 mm lugs
+1 Textile watch strap,1,"22 mm two-piece quick-release, woven nylon, skin-safe, washable, about 8 g",Online retailer (watch straps),10.00,buy,Indicative price; quick-release bars fit the 22 mm lugs. Replaces the 12 g silicone strap per TRT-DDR-002 (D7)
 2 Enclosure lid,1,"3D-printed PETG, 30 x 40 x 1.5 mm, 2 screw holes, 2 mm light pipe bore",Self (FDM printer),0.50,make,"Material about 2.3 g; price includes failed-print allowance"
 3 Controller and IMU module,1,"Seeed Studio XIAO nRF52840 Sense: nRF52840, LSM6DS3TR-C IMU, 2 MB QSPI flash, BQ25101 charger",Seeed Studio or distributor,15.99,buy,Indicative list price; confirm at order. Decided by Amish 2026-09-25 (TRT-DDR-001)
 4 LiPo cell,1,"150 mAh 3.7 V protected, 19.75 x 26.02 x 3.8 mm, 4.65 g, JST-PH lead",Adafruit (product 1317) or distributor,5.95,buy,Price and size from the Adafruit listing checked 2026-09-25; charge at 150 mA or less
