@@ -171,3 +171,37 @@ TRL 4 remains on hold by Amish's instruction. Nothing was built, bought, tested 
 
 - `README.md`, "Where it could be used", India row: the row had no citation. It now cites the ICMR, PHFI and IHME release of 14 July 2021 on the India State-Level Disease Burden Initiative study of neurological disorders (1990 to 2019), which reports that the burden of non-communicable neurological disorders, including Parkinson's disease, is rising mainly through population ageing and calls for addressing the shortage of trained neurology workforce. The unsourced claim that specialist care is concentrated in cities was removed.
 - All other links in the four README source sections were re-fetched and confirmed (WHO, Louis and Ferreira 2010, WFN 2017, Commonwealth Fund 2016, Qi et al. 2021, Löhle et al. 2022, which also confirms the Hauser et al. 2000 diary). The inspiration (Hauser home diary) is unchanged. No controlled documents changed.
+
+## Session 2026-09-26: product appearance model and photoreal renders
+
+Amish chose this repo for the first batch of product renders on 2026-09-26. This session adds an appearance model for photoreal renders; it changes no design value, requirement, calculation or controlled document.
+
+### What was done
+
+- New `cad/src/product_model.py` (`product_parts()`, `TITLE`, `RENDER_VIEWS`). It imports `PARAMS`, `_derived()` and `build_parts()` from `cad/src/model.py` and keeps every main dimension and interface: pod 30 x 40 x 12 mm, 22 mm lugs, spring bar axes, gasket seat, screw positions, light pipe bore, charging opening and the internal envelopes.
+- `README.md`: hero image now points to `media/render-hero.png`, with a link to `media/render-exploded.png`. The render files are produced separately.
+
+What the appearance model adds (28 parts: 15 shell, 10 internal, 2 accessory, 1 context):
+
+- Filleted base (0.6 mm underside edge, 0.4 mm top rim) and lid (1.0 mm top edge), so the dark TPU gasket reads as the parting line.
+- Three shallow grip ribs on each X face of the base.
+- Pan-head M2 lid screws with a cross recess, sitting in shallow seats in the lid.
+- Status light pipe shown lit (emissive), plus the module's status LED.
+- A raised tremor-trace mark (a short decaying wave) on the lid in the kit accent, #0F766E.
+- Visible internals: module PCB with RF shield, USB-C, ICs and castellated pads; foam pad; LiPo cell with protection tape; magnetic charging receptacle with gold contacts; separate spring bars.
+- Two-piece woven strap with edge stitching, buckle and keeper, following the clay wrist and wrapping the spring bars inside the lug notches.
+- Magnetic charging lead with a USB-A plug, shown in the exploded view only.
+- Scale context: the shared clay forearm and left hand (`.kit/context_parts.py`, flat pose, forearm length 130 mm), tilted 6 deg so the pod sits level on the back of the wrist.
+
+Render views: `hero` (front right, 30 deg elevation, worn on the wrist), `exploded` (front right, 28 deg) and `detail` (front right, 38 deg, pod and strap without the arm).
+
+### Differences from model.py
+
+1. **Strap path.** `model.py` draws the strap as a 32 mm radius circular loop centred 31.5 mm below the skin. The appearance model follows the elliptical clay wrist (about 67 x 48 mm) and shows a two-piece strap with a buckle, 21.6 mm wide so it clears the 22 mm lugs in the render. Proposed, awaiting Amish. Recommendation: keep the circle in `model.py` for the drawing and mass figures, and use the elliptical path only for renders.
+2. **Screw heads above the lid.** `model.py` has no screw heads. The pan heads stand about 0.85 mm above the lid, so the pod reads about 12.9 mm tall at the screws against the 12 mm envelope (the R6 limit is 14 mm, so R6 is still met). Proposed, awaiting Amish. Recommendation: specify countersunk M2 screws at TRL 4 so the lid stays flush, or accept the pan heads and update the envelope note.
+3. **Lid marking and grip ribs.** Neither is in `model.py` or the BOM. Proposed, awaiting Amish. Recommendation: keep both as printed-in features (no cost change), with the mark 0.14 mm raised or debossed.
+4. **Module detail and charging lead.** Shield, USB-C position, IC placement and the charging lead shape are indicative only and are not taken from a datasheet. Proposed, awaiting Amish. Recommendation: accept as illustration only.
+
+### Confirmation
+
+This is an appearance model only: no tolerances, no fabrication detail, nothing past TRL 3. `trl: 3` is unchanged in `project.yaml`, and TRL 4 remains on hold.
