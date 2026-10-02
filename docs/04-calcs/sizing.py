@@ -61,8 +61,8 @@ MASS_BOUGHT_G = {                    # g
     "LiPo cell, 150 mAh (Adafruit 1317)": 4.65,
     "Charging connector receptacle (assumed)": 1.0,
     "Spring bars, 2 (assumed)": 0.6,
-    "M2 screws, 2 (assumed)": 0.3,
-    "Wire, foam pad, light pipe (assumed)": 0.8,
+    "M2 x 6 countersunk screws, 4 (assumed)": 0.6,       # four, one per lug horn (TRT-DDR-003)
+    "Wire, two foam pads, light pipe, epoxy (assumed)": 1.0,  # upper foam pad and epoxy added (TRT-DDR-003)
 }
 
 
@@ -193,14 +193,15 @@ bb = model.build().bounding_box()
 print(f"Pod envelope {bb.size.X:.1f} x {bb.size.Y:.1f} x {bb.size.Z:.1f} mm (limit 45 x 35 x 14 mm; "
       f"{bb.size.Y:.0f} across the wrist, {bb.size.X:.0f} along it)")
 stack = p["cell"][2] + p["foam_t"] + p["module"][2]
-print(f"Internal stack {stack:.1f} mm in a {p['cav_h']:.1f} mm cavity: {p['cav_h']-stack:.1f} mm clearance")
+print(f"Internal stack {stack:.1f} mm in a {p['cav_h']:.1f} mm cavity: {p['cav_h']-stack:.1f} mm, filled by the upper foam pad "
+      f"({p['top_foam_t']:.1f} mm compressed) so the lid clamps the stack")
 m_print = {"Enclosure base (PETG)": P["base"].volume / 1000 * DENS["PETG"],
            "Enclosure lid (PETG)": P["lid"].volume / 1000 * DENS["PETG"],
            "Gasket (TPU)": P["gasket"].volume / 1000 * DENS["TPU"]}
 total = 0.0
 for k, v in {**m_print, **MASS_BOUGHT_G}.items():
     total += v
-    print(f"  {k:42s} {v:5.2f} g")
+    print(f"  {k:50s} {v:5.2f} g")
 print(f"Total mass {total:.1f} g (limit 30 g); margin {30-total:.1f} g")
 print(f"With a 12 g silicone strap (TRL 3 baseline, replaced per TRT-DDR-002): {total-8+12:.1f} g; "
       f"with a 10 g textile strap: {total-8+10:.1f} g")
@@ -209,4 +210,6 @@ print(f"With a 12 g silicone strap (TRL 3 baseline, replaced per TRT-DDR-002): {
 hr("R10: cost (bom/bom.csv)")
 rows = list(csv.DictReader((ROOT / "bom" / "bom.csv").open()))
 cost = sum(float(r["qty"]) * float(r["unit_cost_usd"]) for r in rows)
-print(f"{len(rows)} lines, parts total ${cost:.2f} per band against the $150 budget")
+target = 150.0   # budget_usd in project.yaml: a value-engineering target, not a limit
+print(f"{len(rows)} lines, parts total ${cost:.2f} per band; value-engineering target ${target:.0f}, "
+      f"${target-cost:.2f} under the target")

@@ -211,3 +211,53 @@ This is an appearance model only: no tolerances, no fabrication detail, nothing 
 - Kit 1.5.0 synced: STANDARDS v1.5 (sections 12 to 15: product renders, storefront images and image quality, public release, authorship and signing), `.kit/cards.py`, `.kit/image_qc.py`, `.kit/release_gate.py`, issue templates, and the `/render-product` and `/release` commands. `CLAUDE.md` now matches `.kit/CLAUDE.md`.
 - Every `media/render-*.png` recaptioned from its original render with the new layout: the title, concept label and repository sit in a band above the render and the view note in a band below it, each line wrapped to the image width, so no text overlaps other text or the render or runs off the image. `media/card.png` and `media/social-preview.png` regenerated with the same rules.
 - `python .kit/image_qc.py` and `python .kit/release_gate.py` pass. trl stays 3.
+
+## Session 2026-10-02: design for construction and the prototype build plan (kit 1.7.0)
+
+Authority: Amish, 2026-09-30, approved the build plan format ("this is the correct build plan ... this is a good quality document format. Extend this across all the other repos"), asked that outstanding decisions go in a separate design decisions register, and wrote: "If you are realising that the design cannot be built as per concept - fix the design assumptions to match and be physically feasible as you draw the illustrations." On 2026-10-01 he set budgets as value-engineering targets. TRL stays at 3; nothing was built, bought or tested.
+
+### What was done
+
+- Kit 1.7.0 installed (`.kit/`, `.claude/commands/`); `CLAUDE.md` matches `.kit/CLAUDE.md`.
+- Constructability review of `cad/src/model.py` with build123d intersection and distance checks; the model now carries every part that is made or fitted, and `python cad/src/model.py --check` runs 29 checks, all passing.
+- `docs/decisions/0003-design-for-construction.md` (TRT-DDR-003 v0.1, Draft): every change, with its reason.
+- `docs/05-build-plan.md` (TRT-BLD-001 v0.1) with `cad/src/build_plan_media.py`: overview, four making sketches (`cad/drawings/TRT-DWG-101` to `104`), five joint close-ups, eight step pictures and a wiring diagram in `docs/05-build-plan/`.
+- `docs/06-design-decisions.md` (TRT-DEC-001 v0.1): ten open decisions, eight items to confirm at purchase, a value-engineering section and the decisions made.
+- STEP and STL regenerated (`cad/step/`, `cad/stl/`); TRT-DWG-002 Rev P3; concept media and `media/model.glb` regenerated.
+- TRT-CAL-001 v0.3, TRT-REQ-001 v0.5, TRT-PRC-001 v0.6, `bom/bom.csv`, `bom/bom-notes.md`, `docs/04-calcs/sizing.py`, `project.yaml` (`design_state: constructable`, new evidence) and `README.md` (links line, "Building the prototype", value-engineering target) updated; PDFs rebuilt.
+
+### Design changes made for construction (TRT-DDR-003)
+
+| # | Change |
+| --- | --- |
+| C1 | Spring bar holes 1.0 mm through each lug horn for the bar tips (were 1.8 mm, wider than the bar body, so a bar could slide out) |
+| C2 | Four M2 x 6 countersunk screws, one in each lug horn, 4 mm of thread in solid plastic (were two on the centre line whose pilot holes broke into the strap notch) |
+| C3 | Strap notches 4.5 mm deep (were 4.0 mm; the looped strap rubbed the notch face) |
+| C4 | Printed glue collar round the charging receptacle opening; receptacle set in epoxy (had no fixing) |
+| C5 | Three printed ribs make a cell pocket with 0.3 mm clearance (the cell was free to slide) |
+| C6 | Upper foam pad, 2 mm squeezed to 1.7 mm, so the lid clamps the stack; lower pad modelled (the module floated) |
+| C7 | Cell plug cut off and leads soldered to the module's battery pads (the plug had no room) |
+| C8 | Light pipe modelled, 2 mm long, set in epoxy flush with the top |
+| C9 | Gasket printed 0.8 mm, squeezed to 0.5 mm, with four screw holes |
+
+Knock-on: mass 26.2 g (was 25.4 g), still 3.8 g under the 30 g R6 limit. Value-engineering target: USD 150. Estimated cost of the constructable design: USD 43.69 (USD 106.31 under the target; was USD 43.19). No requirement changed status.
+
+### Proposed, awaiting Amish
+
+- Accept TRT-DDR-003 (register item 1). Recommendation: accept.
+- A1 firmware update route once the pod is sealed. Recommendation: over Bluetooth, with opening the pod kept for recovery.
+- A2 the skin-side charging contacts. Recommendation: confirm the module's 5 V pin is dead with no charger; add a Schottky diode if it is not.
+- Carried over, unchanged: O1 to O3 (partner, OpenRatio, kit 1.3.1) and the 2026-09-26 appearance items 1, 3 and 4. All are in `docs/06-design-decisions.md`.
+
+### Stale files (made on Amish's Mac)
+
+`media/render-hero.png`, `media/render-exploded.png`, `media/render-detail.png`, `media/card.png`, `media/social-preview.png` and the appearance model `cad/src/product_model.py` still show two pan-head lid screws on the centre line; the change to four flush countersunk screws in the lug horns is visible on the lid. They need regenerating with `/render-product` on the Mac. They were not regenerated here.
+
+### Safety concerns
+
+- Unchanged: not a medical device; protected cell, never charged while worn, 50 mA setting; tremor data stays local.
+- New: the cell's plug is cut off during the build (safety stop S2: one lead at a time); the charging contacts touch the skin (A2 and safety stop S6).
+
+### Recommended next step
+
+Amish reviews TRT-DDR-003 and the register. TRL 4 (building to TRT-BLD-001 and recording the first checks) remains on hold by his instruction.

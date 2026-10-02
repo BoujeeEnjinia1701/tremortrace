@@ -3,9 +3,9 @@ doc_id: TRT-REQ-001
 title: TremorTrace requirements
 project: TremorTrace
 doc_type: Requirements
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,11 +25,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.5"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'Design for construction (TRT-DDR-003): R6 and R10 figures; budget as a value-engineering target'
 ---
 
 # TremorTrace requirements
 
-These requirements were checked by calculation in TRT-CAL-001 (TRL 3). Nine are met by calculation or design review and R7 and R8 cannot be verified on paper; none is not met. Changes in v0.3 follow Amish's decisions of 2026-09-25 (TRT-DDR-001). In v0.4, R6 moves from at risk to met because the textile strap recommended at TRL 3 was accepted (TRT-DDR-002), and R4 names the 50 mA charge setting.
+These requirements were checked by calculation in TRT-CAL-001 (TRL 3). Nine are met by calculation or design review and R7 and R8 cannot be verified on paper; none is not met. Changes in v0.3 follow Amish's decisions of 2026-09-25 (TRT-DDR-001). In v0.4, R6 moves from at risk to met because the textile strap recommended at TRL 3 was accepted (TRT-DDR-002), and R4 names the 50 mA charge setting. In v0.5 the mass and cost figures follow the constructable design (TRT-DDR-003) and the budget is treated as a value-engineering target; no status changes.
 
 Table 1. Requirements and TRL 3 status.
 
@@ -40,11 +44,11 @@ Table 1. Requirements and TRL 3 status.
 | R3 | Sample motion fast enough | 6-axis IMU at 100 Hz or more | Datasheet and firmware configuration | Met |
 | R4 | Run a full waking day and more | 3 days or more between charges at 16 h per day of wear; recharge at the 50 mA setting | Power budget calculation | Met, 4.5 to 6.3 days, if the firmware sleeps |
 | R5 | Store a week of results on the band | 7 days of 10 s window summaries at 16 h of wear per day without a phone, alongside a reserved area for on-demand raw snippets | Storage calculation | Met, 9.7 days |
-| R6 | Comfortable for all-day wear | Mass 30 g or less including strap; pod no larger than 45 x 35 x 14 mm | Massing model, then weighing | Met: 25.4 g with textile strap (TRT-CAL-001 v0.2); size met |
+| R6 | Comfortable for all-day wear | Mass 30 g or less including strap; pod no larger than 45 x 35 x 14 mm | Massing model, then weighing | Met: 26.2 g with textile strap (TRT-CAL-001 v0.3); size met |
 | R7 | Skin-safe and wearable | Silicone or textile strap; no exposed electronics; splash resistant (IP54 target) | Design review | Not verifiable at TRL 3 |
 | R8 | Produce a daily tremor profile | Open notebook turning window summaries into a daily chart of tremor time, frequency and amplitude | Run on sample data | Not verifiable at TRL 3 |
 | R9 | Protect health data | Data stored locally and exported only by the owner; no cloud dependency | Design review | Met (design review) |
-| R10 | Low cost and buildable | Parts cost $150 or less per unit; no custom PCB required for the first build | Priced BOM | Met, $43.19 |
+| R10 | Low cost and buildable | Parts cost reported against the USD 150 value-engineering target; no custom PCB required for the first build | Priced BOM | Met: USD 43.69, USD 106.31 under the target |
 | R11 | Clear status | Status LED on the band and the web Bluetooth page show battery, recording and sync state | Design review | Met (design review) |
 
 ## Assumptions

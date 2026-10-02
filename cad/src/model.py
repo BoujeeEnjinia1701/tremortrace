@@ -1,15 +1,19 @@
-"""TremorTrace parametric model (build123d), TRL 3 massing-plus level.
+"""TremorTrace parametric model (build123d), constructable design (TRT-DDR-003).
 
-Run from the repo root:  python cad/src/model.py
-Exports STEP and STL into cad/step and cad/stl.
+Run from the repo root:
+    python cad/src/model.py            export STEP and STL into cad/step and cad/stl, print the checks
+    python cad/src/model.py --check    print the constructability checks only
 
 Axes: X along the forearm (toward the hand is +X), Y across the wrist, Z up
 (away from the skin). The pod underside rests on the skin at Z = 0.
 
-Detail level: correct interfaces (strap lugs, spring bars, gasket seat, lid
-screws, charging connector opening, LED light pipe) and main dimensions. Not
-fabrication detail. PRELIMINARY, NOT FOR FABRICATION.
+Detail level: every part that is made or fitted in the prototype build plan
+(TRT-BLD-001), with its fixing: base with lug horns, spring bar tip holes, cell
+locating ribs and a glue collar for the charging receptacle; gasket; lid with four
+countersunk screw seats and a light pipe; foam pads; spring bars with tips; strap
+ends looped round the bars. PRELIMINARY, NOT FOR FABRICATION.
 """
+import sys
 from pathlib import Path
 
 # Top-level parameters (mm). Edit these, not the geometry below.
@@ -21,104 +25,274 @@ PARAMS = {
     "wall": 1.5,              # side wall thickness
     "floor": 1.0,             # base floor thickness
     "lid_t": 1.5,             # lid thickness
-    "gasket_t": 0.5,          # compressed TPU gasket thickness
+    "gasket_t": 0.5,          # compressed TPU gasket thickness (printed 0.8 mm)
     "corner_r": 3.0,          # plan-view corner radius
     # Strap interface (standard 22 mm watch strap, quick-release spring bars)
     "strap_w": 22.0,          # lug width between the horns
-    "lug_notch_d": 4.0,       # notch depth into each Y end, under the spring bar
+    "lug_notch_d": 4.5,       # notch depth into each Y end, under the spring bar (DDR-003 C2; was 4.0)
     "lug_notch_h": 6.0,       # notch height from the underside
-    "bar_d": 1.8,             # spring bar hole diameter
+    "bar_d": 1.0,             # spring bar tip hole through each horn (DDR-003 C1; was 1.8)
+    "bar_body_d": 1.5,        # spring bar body
+    "bar_tip_d": 0.9,         # spring bar tip
+    "bar_tip_len": 1.5,       # tip engagement in each horn
     "bar_z": 3.0,             # spring bar axis height above the skin
     "bar_inset": 2.0,         # spring bar axis distance from the pod Y end
     # Internal parts (envelopes)
     "cell": (19.75, 26.02, 3.8),   # 150 mAh protected LiPo, X, Y, Z (Adafruit 1317 class)
     "module": (17.8, 21.0, 3.5),   # XIAO nRF52840 Sense class, X, Y, Z (height assumed)
-    "foam_t": 0.5,            # foam pad between cell and module
+    "foam_t": 0.5,            # adhesive foam pad between cell and module
+    "top_foam_t": 1.7,        # foam pad between module and lid, compressed (DDR-003 C5; cut from 2 mm)
     "pogo": (4.0, 8.0, 3.0),  # magnetic 2-pin charging receptacle, X, Y, Z
     "led_d": 2.0,             # light pipe bore in the lid
-    "screw_d": 1.6,           # M2 thread-forming screw pilot hole
-    "screw_len": 6.0,
+    "pipe_len": 2.0,          # light pipe length (top flush with the lid)
+    "led_hole_d": 4.0,        # hole in the top foam pad round the LED and light pipe
+    "cell_gap": 0.3,          # clearance round the cell in its pocket
+    "rib_w": 1.0,             # cell locating rib width (DDR-003 C4)
+    "rib_h": 1.5,             # rib height above the floor
+    "collar_w": 0.8,          # glue collar wall round the charging receptacle (DDR-003 C3)
+    "collar_h": 2.0,          # collar height above the floor
+    # Lid screws: four M2 x 6 countersunk thread-forming, one in each lug horn (DDR-003 C2)
+    "screw_d": 1.6,           # pilot hole (thread core)
+    "screw_clear_d": 2.2,     # clearance hole in the lid and gasket
+    "screw_len": 6.0,         # overall length, head included
+    "head_d": 3.8,            # countersunk head diameter
+    "head_h": 1.1,            # countersunk head depth
+    "screw_inset_y": 2.6,     # screw axis distance from the pod Y end
     # Context
     "wrist_r": 32.0,          # wrist radius used for the strap loop
-    "strap_t": 1.4,           # woven textile quick-release strap, about 8 g (DDR-002 D7; was 2.5 mm silicone)
+    "strap_t": 1.4,           # woven textile quick-release strap, about 8 g (DDR-002 D7)
+    "strap_clear": 0.2,       # strap side clearance to each horn
 }
 
 
 def _derived(p):
     d = dict(p)
     d["base_h"] = p["pod_h"] - p["lid_t"] - p["gasket_t"]
+    d["lid_z"] = d["base_h"] + p["gasket_t"]
     d["cav_x"] = p["pod_x"] - 2 * p["wall"]
     # The cavity stops short of the lug notches so the notch walls stay closed.
     d["cav_y"] = p["pod_y"] - 2 * (p["lug_notch_d"] + 1.2)
     d["cav_h"] = d["base_h"] - p["floor"] + p["gasket_t"]   # floor to lid underside
-    d["screw_y"] = p["pod_y"] / 2 - p["lug_notch_d"] / 2 - 0.6
+    # Screws sit in the middle of each lug horn (the solid corner between notch and side face).
+    d["screw_x"] = p["strap_w"] / 2 + (p["pod_x"] - p["strap_w"]) / 4
+    d["screw_y"] = p["pod_y"] / 2 - p["screw_inset_y"]
+    d["screw_engage"] = p["screw_len"] - p["lid_t"] - p["gasket_t"]
     cx, cy, cz = p["cell"]
-    d["cell_x0"] = -d["cav_x"] / 2 + 0.3                   # cell against the -X wall
+    d["cell_x0"] = -d["cav_x"] / 2 + p["cell_gap"]         # cell against the -X wall
     d["cell_cx"] = d["cell_x0"] + cx / 2
     d["pogo_cx"] = d["cav_x"] / 2 - p["pogo"][0] / 2 - 0.4  # connector beside the cell, +X side
+    d["mod_z0"] = p["floor"] + cz + p["foam_t"]
+    d["mod_top"] = d["mod_z0"] + p["module"][2]
+    d["bar_y"] = p["pod_y"] / 2 - p["bar_inset"]
     return d
+
+
+def _b():
+    import build123d as b
+    return b
+
+
+def _xcyl(r, length, x, y, z):
+    b = _b()
+    return b.Pos(x, y, z) * b.Rot(0, 90, 0) * b.Cylinder(r, length)
+
+
+def _rbox(x, y, h, r, z0, cx=0.0, cy=0.0):
+    """Box with vertical edges rounded, from z0 up."""
+    b = _b()
+    s = b.Pos(cx, cy, z0 + h / 2) * b.Box(x, y, h)
+    return b.fillet(s.edges().filter_by(b.Axis.Z), r)
 
 
 def build_parts(params=None):
     """Return a dict of named build123d solids for the assembly."""
-    from build123d import (Box, Cylinder, Pos, Rot, fillet, Axis)
+    b = _b()
+    Box, Cylinder, Cone, Pos = b.Box, b.Cylinder, b.Cone, b.Pos
     p = _derived(params or PARAMS)
     X, Y, H = p["pod_x"], p["pod_y"], p["base_h"]
+    sx_, sy_ = p["screw_x"], p["screw_y"]
+    corners = [(i * sx_, j * sy_) for i in (-1, 1) for j in (-1, 1)]
 
-    # Enclosure base: rounded box, cavity, lug notches, spring bar holes, screw pilots, connector opening
-    base = Pos(0, 0, H / 2) * Box(X, Y, H)
-    base = fillet(base.edges().filter_by(Axis.Z), p["corner_r"])
+    # Enclosure base: rounded box, cavity, lug notches, spring bar tip holes, screw pilots, receptacle opening
+    base = _rbox(X, Y, H, p["corner_r"], 0)
     base -= Pos(0, 0, p["floor"] + H / 2) * Box(p["cav_x"], p["cav_y"], H)
     for s in (-1, 1):
-        base -= Pos(0, s * (Y / 2 - p["lug_notch_d"] / 2 + 0.5), p["lug_notch_h"] / 2 - 0.5) * Box(
-            p["strap_w"], p["lug_notch_d"] + 1.0, p["lug_notch_h"] + 1.0)
-        base -= Pos(0, s * (Y / 2 - p["bar_inset"]), p["bar_z"]) * Rot(0, 90, 0) * Cylinder(p["bar_d"] / 2, X + 2)
-        engage = p["screw_len"] - p["lid_t"] - p["gasket_t"]      # thread engagement in the base
-        base -= Pos(0, s * p["screw_y"], H - engage / 2 + 0.5) * Cylinder(p["screw_d"] / 2, engage + 1.0)
-    px, py, pz = p["pogo"]
-    base -= Pos(p["pogo_cx"], 0, p["floor"] / 2) * Box(px, py, p["floor"] + 0.2)
-
-    # Gasket: perimeter ring on the base rim
-    ring_out = fillet((Pos(0, 0, 0) * Box(X, Y, p["gasket_t"])).edges().filter_by(Axis.Z), p["corner_r"])
-    gasket = Pos(0, 0, H + p["gasket_t"] / 2) * (ring_out - Box(p["cav_x"], p["cav_y"], p["gasket_t"] + 1))
-    for s in (-1, 1):
-        gasket -= Pos(0, s * p["screw_y"], H + p["gasket_t"] / 2) * Cylinder(1.1, 2)
-
-    # Lid: plate with screw clearance holes and LED light pipe bore
-    lid_z = H + p["gasket_t"]
-    lid = fillet(Box(X, Y, p["lid_t"]).edges().filter_by(Axis.Z), p["corner_r"])
-    lid = Pos(0, 0, lid_z + p["lid_t"] / 2) * lid
-    for s in (-1, 1):
-        lid -= Pos(0, s * p["screw_y"], lid_z + p["lid_t"] / 2) * Cylinder(1.1, p["lid_t"] + 1)
-    led_xy = (0.0, -p["module"][1] / 2 + 4.0)
-    lid -= Pos(led_xy[0], led_xy[1], lid_z + p["lid_t"] / 2) * Cylinder(p["led_d"] / 2, p["lid_t"] + 1)
-
-    # Internal envelopes
+        d = p["lug_notch_d"]
+        base -= Pos(0, s * (Y / 2 - d / 2 + 0.5), p["lug_notch_h"] / 2 - 0.5) * Box(p["strap_w"], d + 1.0, p["lug_notch_h"] + 1.0)
+        base -= _xcyl(p["bar_d"] / 2, X + 2, 0, s * p["bar_y"], p["bar_z"])
+    for (x, y) in corners:
+        dep = p["screw_engage"] + 0.5
+        base -= Pos(x, y, H - dep / 2) * Cylinder(p["screw_d"] / 2, dep)
+    # Cell locating ribs (printed with the base): one on the +X side, one along each Y side
     cx, cy, cz = p["cell"]
+    rz = p["floor"] + p["rib_h"] / 2
+    x_end = p["cell_x0"] + cx
+    ribs = Pos(x_end + p["cell_gap"] + p["rib_w"] / 2, 0, rz) * Box(p["rib_w"], 20.0, p["rib_h"])
+    y_in = cy / 2 + p["cell_gap"]
+    for s in (-1, 1):
+        w = p["cav_y"] / 2 - y_in
+        ribs += Pos(-3.5, s * (y_in + w / 2), rz) * Box(17.0, w, p["rib_h"])
+    base += ribs
+    # Glue collar round the charging receptacle, then the opening through the floor
+    px, py, pz = p["pogo"]
+    cw = p["collar_w"]
+    x0c = p["pogo_cx"] - px / 2 - cw
+    x1c = p["cav_x"] / 2 + 0.01
+    collar = Pos((x0c + x1c) / 2, 0, p["floor"] + p["collar_h"] / 2) * Box(x1c - x0c, py + 2 * cw, p["collar_h"])
+    base += collar
+    base -= Pos(p["pogo_cx"], 0, (p["floor"] + p["collar_h"]) / 2) * Box(px, py, p["floor"] + p["collar_h"] + 0.2)
+
+    # Gasket: perimeter ring on the base rim, with the four screw holes
+    gz = H + p["gasket_t"] / 2
+    gasket = _rbox(X, Y, p["gasket_t"], p["corner_r"], H) - Pos(0, 0, gz) * Box(p["cav_x"], p["cav_y"], p["gasket_t"] + 1)
+    for (x, y) in corners:
+        gasket -= Pos(x, y, gz) * Cylinder(p["screw_clear_d"] / 2, 2)
+
+    # Lid: plate with four countersunk screw seats and the light pipe bore
+    lz = p["lid_z"]
+    lid = _rbox(X, Y, p["lid_t"], p["corner_r"], lz)
+    top = lz + p["lid_t"]
+    hr, hh = p["head_d"] / 2, p["head_h"]
+    for (x, y) in corners:
+        lid -= Pos(x, y, lz + p["lid_t"] / 2) * Cylinder(p["screw_clear_d"] / 2, p["lid_t"] + 1)
+        lid -= Pos(x, y, top - hh / 2) * Cone(p["screw_d"] / 2, hr, hh)
+        lid -= Pos(x, y, top + 0.25) * Cylinder(hr, 0.5)
+    led_xy = (0.0, -p["module"][1] / 2 + 4.0)
+    lid -= Pos(led_xy[0], led_xy[1], lz + p["lid_t"] / 2) * Cylinder(p["led_d"] / 2, p["lid_t"] + 1)
+
+    # Screws: countersunk head in the lid seat, shank at core diameter in the pilot hole
+    screws = None
+    for (x, y) in corners:
+        sc = Pos(x, y, top - hh / 2) * Cone(p["screw_d"] / 2, hr, hh)
+        L = p["screw_len"] - hh
+        sc += Pos(x, y, top - hh - L / 2) * Cylinder(p["screw_d"] / 2, L)
+        screws = sc if screws is None else screws + sc
+
+    # Light pipe, glued in the lid bore, top flush with the lid
+    pipe = Pos(led_xy[0], led_xy[1], top - p["pipe_len"] / 2) * Cylinder(p["led_d"] / 2, p["pipe_len"])
+
+    # Internal parts
     cell = Pos(p["cell_cx"], 0, p["floor"] + cz / 2) * Box(cx, cy, cz)
+    foam = Pos(0, 0, p["floor"] + cz + p["foam_t"] / 2) * Box(p["module"][0], p["module"][1] - 2.0, p["foam_t"])
     mx, my, mz = p["module"]
-    mod_z0 = p["floor"] + cz + p["foam_t"]
-    module = Pos(0, 0, mod_z0 + mz / 2) * Box(mx, my, mz)
+    module = Pos(0, 0, p["mod_z0"] + mz / 2) * Box(mx, my, mz)
+    tf = p["top_foam_t"]
+    top_foam = Pos(0, 0, p["mod_top"] + tf / 2) * Box(mx - 1.8, my - 2.0, tf)
+    top_foam -= Pos(led_xy[0], led_xy[1], p["mod_top"] + tf / 2) * Cylinder(p["led_hole_d"] / 2, tf + 1)
     pogo = Pos(p["pogo_cx"], 0, pz / 2) * Box(px, py, pz)
+
+    # Spring bars: body between the horns, tips into the horn holes
     bars = None
     for s in (-1, 1):
-        b = Pos(0, s * (Y / 2 - p["bar_inset"]), p["bar_z"]) * Rot(0, 90, 0) * Cylinder(0.75, p["strap_w"] + 3)
-        bars = b if bars is None else bars + b
+        y = s * p["bar_y"]
+        bar = _xcyl(p["bar_body_d"] / 2, p["strap_w"], 0, y, p["bar_z"])
+        L = p["strap_w"] + 2 * p["bar_tip_len"]
+        bar += _xcyl(p["bar_tip_d"] / 2, L, 0, y, p["bar_z"])
+        bars = bar if bars is None else bars + bar
 
-    # Strap: loop around the wrist, cut back where it meets the pod lugs
+    # Strap: two ends looped round the spring bars, each running down out of the notch and on
+    # round the wrist (the buckle side under the wrist is not drawn in detail)
     R, T = p["wrist_r"], p["strap_t"]
-    strap = Pos(0, 0, -R + 0.5) * Rot(0, 90, 0) * (Cylinder(R + T, p["strap_w"]) - Cylinder(R, p["strap_w"] + 1))
-    strap -= Pos(0, 0, 10) * Box(p["strap_w"] + 2, Y - 2 * p["bar_inset"] - 2, 40)
+    sw = p["strap_w"] - 2 * p["strap_clear"]
+    zc = -R + 0.5
+    loop = Pos(0, 0, zc) * b.Rot(0, 90, 0) * (Cylinder(R + T, sw) - Cylinder(R, sw + 1))
+    yb = p["bar_y"]
+    ro = p["bar_body_d"] / 2 + T
+    loop -= Pos(0, 0, 10) * Box(sw + 2, 2 * (yb + ro - T) , 60)
+    strap = loop
+    for s in (-1, 1):
+        y = s * yb
+        ring = _xcyl(ro, sw, 0, y, p["bar_z"]) - _xcyl(p["bar_body_d"] / 2, sw + 1, 0, y, p["bar_z"])
+        ytail = s * (yb + p["bar_body_d"] / 2 + T / 2)
+        tail = Pos(0, ytail, (p["bar_z"] - 9.0) / 2) * Box(sw, T, p["bar_z"] + 9.0)
+        strap += ring + tail
 
     return {"strap": strap, "lid": lid, "module": module, "cell": cell, "base": base,
-            "pogo": pogo, "gasket": gasket, "bars": bars, "_p": p, "_led": led_xy}
+            "pogo": pogo, "gasket": gasket, "bars": bars, "screws": screws, "pipe": pipe,
+            "foam": foam, "top_foam": top_foam, "_p": p, "_led": led_xy}
+
+
+POD_KEYS = ("base", "gasket", "lid", "screws", "pipe", "cell", "foam", "module", "top_foam", "pogo", "bars")
 
 
 def build(params=None):
     """Pod assembly without the strap (the object on the general arrangement drawing)."""
     from build123d import Compound
     parts = build_parts(params)
-    return Compound(children=[parts[k] for k in ("base", "gasket", "lid", "cell", "module", "pogo", "bars")])
+    return Compound(children=[parts[k] for k in POD_KEYS])
+
+
+# ---------------------------------------------------------------- constructability checks
+def _vol(a, b_):
+    try:
+        s = a & b_
+        return s.volume if s is not None else 0.0
+    except Exception:
+        return float("nan")
+
+
+def checks(params=None):
+    """Pairs of parts: either they must touch (no overlap, gap 0) or be apart by a stated
+    clearance. Returns (description, overlap mm3, gap mm, expectation, ok)."""
+    P = build_parts(params)
+    rows = []
+
+    def chk(desc, a, b_, expect):
+        v = _vol(P[a] if isinstance(a, str) else a, P[b_] if isinstance(b_, str) else b_)
+        gp = (P[a] if isinstance(a, str) else a).distance_to(P[b_] if isinstance(b_, str) else b_)
+        ok = v < 1e-3 and (gp < 0.02 if expect == "touch" else gp >= expect - 1e-6)
+        rows.append((desc, v, gp, expect, ok))
+
+    chk("Cell on the base floor", "cell", "base", "touch")
+    chk("Charging receptacle in its collar and floor opening", "pogo", "base", "touch")
+    chk("Charging receptacle clear of the cell", "pogo", "cell", 1.0)
+    chk("Lower foam pad on the cell", "foam", "cell", "touch")
+    chk("Module on the lower foam pad", "module", "foam", "touch")
+    chk("Module clear of the base (walls, ribs, collar)", "module", "base", 1.0)
+    chk("Module clear of the charging receptacle", "module", "pogo", 1.0)
+    chk("Lower foam pad clear of the base", "foam", "base", 1.0)
+    chk("Upper foam pad on the module", "top_foam", "module", "touch")
+    chk("Upper foam pad against the lid underside", "top_foam", "lid", "touch")
+    chk("Upper foam pad clear of the base", "top_foam", "base", 0.5)
+    chk("Light pipe in the lid bore", "pipe", "lid", "touch")
+    chk("Light pipe clear of the module (LED below)", "pipe", "module", 0.5)
+    chk("Light pipe clear of the upper foam pad", "pipe", "top_foam", 0.5)
+    chk("Gasket on the base rim", "gasket", "base", "touch")
+    chk("Lid on the gasket", "lid", "gasket", "touch")
+    chk("Lid clear of the base (gasket gap)", "lid", "base", 0.4)
+    chk("Cell clear of the lid", "cell", "lid", 1.0)
+    chk("Screws in their lid seats", "screws", "lid", "touch")
+    chk("Screws in their pilot holes in the horns", "screws", "base", "touch")
+    chk("Screws clear of the gasket", "screws", "gasket", 0.2)
+    chk("Screws clear of the spring bars", "screws", "bars", 1.0)
+    chk("Screws clear of the strap", "screws", "strap", 0.5)
+    chk("Spring bar tips in the horn holes", "bars", "base", "touch")
+    chk("Strap looped on the spring bars", "strap", "bars", "touch")
+    chk("Strap clear of the base (notch faces and horns)", "strap", "base", 0.15)
+    chk("Strap clear of the charging receptacle", "strap", "pogo", 1.0)
+    # The cell sits in its pocket with a stated clearance to every rib and wall
+    b = _b()
+    p = P["_p"]
+    cx, cy, cz = p["cell"]
+    ring = b.Pos(p["cell_cx"], 0, p["floor"] + 0.75) * b.Box(cx + 2 * p["cell_gap"] - 0.02, cy + 2 * p["cell_gap"] - 0.02, 1.4)
+    pocket = P["base"] & ring
+    rows.append(("Cell pocket: ribs and wall 0.3 mm from the cell", pocket.volume if pocket else 0.0,
+                 p["cell_gap"], 0.3, (pocket.volume if pocket else 0.0) < 1e-3))
+    # Bars must not be able to slide out: body longer than the hole diameter allows
+    ok = p["bar_body_d"] > p["bar_d"] + 0.3
+    rows.append(("Spring bar body cannot enter the 1.0 mm tip hole", 0.0, p["bar_body_d"] - p["bar_d"], 0.3, ok))
+    return rows
+
+
+def print_checks(params=None):
+    rows = checks(params)
+    bad = 0
+    for desc, v, gp, exp, ok in rows:
+        e = "touch" if exp == "touch" else f">= {exp:g} mm"
+        print(f"  {'ok ' if ok else 'BAD'}  {desc:54s} overlap {v:7.3f} mm3  gap {gp:6.2f} mm  ({e})")
+        bad += not ok
+    print(f"constructability checks: {len(rows) - bad} of {len(rows)} pass")
+    return bad
 
 
 def export(out=None):
@@ -128,19 +302,22 @@ def export(out=None):
     parts = build_parts()
     pod = build()
     export_step(pod, str(out / "step" / "tremortrace-pod-assembly.step"))
-    export_stl(pod, str(out / "stl" / "tremortrace-pod-assembly.stl"))
+    export_stl(pod, str(out / "stl" / "tremortrace-pod-assembly.stl"), tolerance=0.05)
     fresh = build_parts()   # a shape can only have one parent, so the strap assembly uses fresh copies
-    full = Compound(children=[fresh[k] for k in ("base", "gasket", "lid", "cell", "module", "pogo", "bars", "strap")])
+    full = Compound(children=[fresh[k] for k in POD_KEYS + ("strap",)])
     export_step(full, str(out / "step" / "tremortrace-on-strap.step"))
     for name in ("base", "lid", "gasket"):
         export_step(parts[name], str(out / "step" / f"tremortrace-{name}.step"))
-        export_stl(parts[name], str(out / "stl" / f"tremortrace-{name}.stl"))
+        export_stl(parts[name], str(out / "stl" / f"tremortrace-{name}.stl"), tolerance=0.02)
     return parts
 
 
 if __name__ == "__main__":
+    if "--check" in sys.argv:
+        sys.exit(1 if print_checks() else 0)
     parts = export()
     bb = build().bounding_box()
     print(f"Pod assembly envelope: {bb.size.X:.1f} x {bb.size.Y:.1f} x {bb.size.Z:.1f} mm (X x Y x Z)")
     for k in ("base", "lid", "gasket"):
         print(f"{k:7s} volume {parts[k].volume / 1000:.2f} cm3")
+    print_checks()

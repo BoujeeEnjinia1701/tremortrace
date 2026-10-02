@@ -2,19 +2,19 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![DOI](https://zenodo.org/badge/1386352982.svg)](https://zenodo.org/badge/latestdoi/1386352982) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/tremortrace/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/tremortrace/actions/workflows/reuse.yml) [![Archived in Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/BoujeeEnjinia1701/tremortrace/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/BoujeeEnjinia1701/tremortrace)
 
-**Area:** BioMedical · **TRL:** 3 of 9 (proof of concept by calculation) · **Prototype budget:** about $150 USD · **Difficulty:** 2 of 5
+**Area:** BioMedical · **TRL:** 3 of 9 (proof of concept by calculation) · **Value-engineering target:** USD 150 (estimated cost USD 43.69) · **Difficulty:** 2 of 5
 
 Wrist-worn IMU band that logs tremor frequency and amplitude continuously, with an open analysis notebook that produces a daily tremor profile.
 
 ![TremorTrace: wrist-worn motion sensor band for logging tremor, product render](media/render-hero.png)
 
-[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [Review note](docs/REVIEW.md)
+[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement (PDF)](cad/drawings/TRT-DWG-002.pdf) · [Calculations](docs/04-calcs/01-sizing.md) · [Prototype build plan](docs/05-build-plan.md) · [Design decisions](docs/06-design-decisions.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
 Research groups have shown that a wrist-worn inertial sensor can follow tremor frequency and amplitude through a normal day, but most of that capability sits inside closed products or a single phone ecosystem. TremorTrace takes the smallest workable path: one off-the-shelf module with a built-in six-axis IMU, a coin-sized cell and a printed pod on a standard 22 mm watch strap. The band reduces each 10 s window to a 32-byte summary and keeps it on the wearer's own devices, so the data volume stays small and the privacy model stays simple.
 
-Being open and garage-buildable matters because the people who most need a daily tremor record, and the researchers who want to study it, rarely control the tools. A design that costs about $43 in parts, needs no custom circuit board and publishes its analysis notebook can be built, inspected and adapted by a university lab, a patient group or a maker space anywhere. It is a research and educational prototype, not a medical device.
+Being open and garage-buildable matters because the people who most need a daily tremor record, and the researchers who want to study it, rarely control the tools. A design that costs about USD 44 in parts, needs no custom circuit board and publishes its analysis notebook can be built, inspected and adapted by a university lab, a patient group or a maker space anywhere. It is a research and educational prototype, not a medical device.
 
 ## Burning platform
 
@@ -65,11 +65,17 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md)
 - Printed PETG enclosure with TPU gasket, 40 x 30 x 12 mm
 - 22 mm woven textile strap, about 8 g
 
-The priced bill of materials ($43.19 in parts) is in [bom/bom.csv](bom/bom.csv).
+The priced bill of materials (USD 43.69 in parts, against a USD 150 value-engineering target) is in [bom/bom.csv](bom/bom.csv).
 
 ## Status at TRL 3
 
-Calculations in [TRT-CAL-001](docs/04-calcs/01-sizing.md) show 0.1 Hz frequency resolution, 4.5 to 6.3 days per charge and 9.7 days of on-band history. Mass is 25.4 g against a 30 g limit with the textile strap adopted under [TRT-DDR-002](docs/decisions/0002-recommendations-accepted.md). The parametric model is [cad/src/model.py](cad/src/model.py) and the general arrangement is [TRT-DWG-002](cad/drawings/TRT-DWG-002.pdf). TRL 4 work is on hold.
+Calculations in [TRT-CAL-001](docs/04-calcs/01-sizing.md) show 0.1 Hz frequency resolution, 4.5 to 6.3 days per charge and 9.7 days of on-band history. Mass is 26.2 g against a 30 g limit with the textile strap adopted under [TRT-DDR-002](docs/decisions/0002-recommendations-accepted.md). The parametric model is [cad/src/model.py](cad/src/model.py) and the general arrangement is [TRT-DWG-002](cad/drawings/TRT-DWG-002.pdf), Rev P3. The design is constructable: every part can be made and fixed as drawn ([TRT-DDR-003](docs/decisions/0003-design-for-construction.md)). TRL 4 work is on hold.
+
+## Building the prototype
+
+![TremorTrace prototype: every component pulled apart and numbered in build order](docs/05-build-plan/overview.png)
+
+The [prototype build plan](docs/05-build-plan.md) (TRT-BLD-001) shows, in pictures, how to make each of the twelve components and put them together in nine steps; nothing has been built yet. The base, lid and gasket are 3D printed, two foam pads are cut from sheet, and the module, cell, charging receptacle, screws, spring bars and strap are bought; the electronics are four soldered wires. Writing the plan made the design buildable: the spring bar holes, lid screws and strap notches were redesigned, and cell ribs, a glue collar for the charging receptacle and foam pads that let the lid clamp the stack were added (TRT-DDR-003, open for Amish's review). Every picture is drawn from the model, and the model checks that each part touches what it should and clears what it should not.
 
 ## Safety
 
@@ -79,7 +85,7 @@ Calculations in [TRT-CAL-001](docs/04-calcs/01-sizing.md) show 0.1 Hz frequency 
 
 | Folder | Contents |
 | --- | --- |
-| `docs/` | Problem, concept, requirements, calculations and design decisions |
+| `docs/` | Problem, concept, requirements, calculations, build plan and design decisions |
 | `cad/src/` | build123d Python source, the source of truth for all geometry |
 | `cad/step/`, `cad/stl/` | Exported models for FreeCAD, other CAD tools and printing |
 | `cad/drawings/` | 2D sketches and dimensioned drawings |
@@ -95,7 +101,7 @@ Controlled documents follow the portfolio [documentation standard](.kit/STANDARD
 
 ## Credits
 
-Designed by Amish Chadha. See [CONTRIBUTORS.md](CONTRIBUTORS.md) for roles. To cite this design, use [CITATION.cff](CITATION.cff) (GitHub shows it as "Cite this repository").
+Designed by Amish Chadha, with contributions from Dr. Geeti Chadha. See [CONTRIBUTORS.md](CONTRIBUTORS.md) for roles. To cite this design, use [CITATION.cff](CITATION.cff) (GitHub shows it as "Cite this repository").
 
 AI assistance (Claude) was used to accelerate concept renders, prototype documentation and first-pass sizing calculations. Design direction and all decisions are Amish Chadha's, recorded in this repository's decision records (`docs/decisions/`).
 
