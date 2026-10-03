@@ -31,14 +31,14 @@ M = model.build_parts()
 p = M["_p"]
 LED = M["_led"]
 
-COL = {"base": "#D1D5DB", "pogo": "#D4A017", "cell": "#C2410C", "foam": "#FDE68A", "module": "#0F766E",
+COL = {"base": "#D1D5DB", "pogo": "#D4A017", "diode": "#111827", "cell": "#C2410C", "foam": "#FDE68A", "module": "#0F766E",
        "top_foam": "#FCD34D", "pipe": "#93C5FD", "gasket": "#374151", "lid": "#E5E7EB", "screws": "#6B7280",
        "bars": "#9CA3AF", "strap": "#1E3A8A", "wrist": "#E7D7C9"}
-NAMES = {"base": "Enclosure base", "pogo": "Charging receptacle", "cell": "LiPo cell", "foam": "Lower foam pad",
+NAMES = {"base": "Enclosure base", "pogo": "Charging receptacle", "diode": "Schottky diode (receptacle lead)", "cell": "LiPo cell", "foam": "Lower foam pad",
          "module": "Controller and IMU module", "top_foam": "Upper foam pad", "pipe": "Light pipe",
          "gasket": "Gasket", "lid": "Lid", "screws": "Lid screws (4)", "bars": "Spring bars (2)",
          "strap": "Strap halves (2)"}
-ORDER = ["base", "pogo", "cell", "foam", "module", "top_foam", "pipe", "gasket", "lid", "screws", "bars", "strap"]
+ORDER = ["base", "pogo", "diode", "cell", "foam", "module", "top_foam", "pipe", "gasket", "lid", "screws", "bars", "strap"]
 
 
 def big(shape):
@@ -69,7 +69,7 @@ def wrist():
 
 # ----------------------------------------------------------------- overview
 def overview():
-    off = {"base": (0, 0, 0), "pogo": (38, 0, 2), "cell": (0, 0, 14), "foam": (0, 0, 24), "module": (0, 0, 32),
+    off = {"base": (0, 0, 0), "pogo": (38, 0, 2), "diode": (38, 12, 14), "cell": (0, 0, 14), "foam": (0, 0, 24), "module": (0, 0, 32),
            "top_foam": (0, 0, 42), "pipe": (-34, 0, 64), "gasket": (0, 0, 52), "lid": (0, 0, 62), "screws": (0, 0, 78),
            "bars": (0, 0, -12), "strap": (0, 0, -26)}
     ends = win(M["strap"], -20, 20, -30, 30, -9, 10)      # the strap ends only; the rest goes round the wrist
@@ -82,7 +82,7 @@ def overview():
 # ----------------------------------------------------------------- making sketches
 def sheets():
     import build123d as b
-    base_ctx = [part("cell"), part("pogo"), part("bars")]
+    base_ctx = [part("cell"), part("pogo"), part("bars"), part("diode")]
     common = dict(project="TremorTrace", date=DATE)
     out = []
     cx = p["cell"][0]
@@ -101,6 +101,7 @@ def sheets():
                f"Cell pocket: ribs 1.5 high leave {pocket_len:.2f} x {p['cell'][1] + 2 * p['cell_gap']:.2f}, 0.3 mm round the cell.",
                "Charging opening 4 x 8 through the floor, 0.4 from the end wall,",
                "  in a collar 0.8 thick and 2 high that holds the glue.",
+               "Diode spot: on the floor 8.5 to one side of the opening, clear of the collar.",
                "Check: a 1.0 mm drill passes each bar hole; the cell drops into its",
                "  pocket by its own weight; nothing is left in the notch."], **common))
     lid_view = M["lid"] + M["pipe"]
@@ -118,6 +119,8 @@ def sheets():
                "  press in flush with the top, a drop of clear epoxy underneath.",
                "  It stands 0.5 mm below the lid, 1.2 mm above the module.",
                "Fit: lies on the gasket; four M2 x 6 countersunk screws into the horns.",
+               "Mark: a short wave debossed 0.4 deep (two 0.2 mm layers) on the top face,",
+               "  clear of the light pipe and screws; the lid keeps 1.1 mm under it.",
                "Check: the screw heads sit flush or just below the top face."], **common))
     out.append(bv.component_sheet(
         part("gasket"), [part("base"), part("lid")], dwg_no="TRT-DWG-103",
@@ -203,9 +206,10 @@ def joints():
         part("base", "Base", shape=M["base"] - ribs),
         part("base", "Ribs and glue collar (green)", shape=ribs, color="#0F766E"),
         part("cell", "LiPo cell, 0.3 mm clear"),
-        part("pogo", "Charging receptacle in its collar")],
+        part("pogo", "Charging receptacle in its collar"),
+        part("diode", "Schottky diode, glued to the floor")],
         OUT / "joint-05.png", "Joint 5: cell in its pocket (lid off, seen from above)",
-        subtitle="Seen straight down. Three low ribs and the end wall hold the cell; the wires run down the sides",
+        subtitle="Seen straight down. Three low ribs and the end wall hold the cell; the diode lies beside the collar; the wires run down the sides",
         elev=89, azim=-90, size=(8, 6)))
     return out
 
@@ -224,17 +228,17 @@ def steps():
     st(2, [B, part("pogo")], [part("cell", explode=(0, 0, 18))], "cell into its pocket",
        "Plug already cut off and leads insulated; leads out along the long sides. Drop it in; no glue",
        elev=30, azim=-55, label_done=False)
-    st(4, [B, part("pogo"), part("cell")], [part("foam", explode=(0, 0, 10)), part("module", explode=(0, 0, 20))],
+    st(4, [B, part("pogo"), part("cell")], [part("diode", explode=(0, 0, 8)), part("foam", explode=(0, 0, 10)), part("module", explode=(0, 0, 20))],
        "lower foam pad and module",
-       "Pad on the cell, then the wired module on the pad, LED toward the light pipe end; tuck the wires in",
+       "Diode glued beside the collar; pad on the cell; wired module on the pad, LED toward the light pipe end",
        elev=30, azim=-55, label_done=False)
-    st(5, [B, part("pogo"), part("cell"), part("foam"), part("module")], [part("top_foam", explode=(0, 0, 14))],
+    st(5, [B, part("pogo"), part("diode"), part("cell"), part("foam"), part("module")], [part("top_foam", explode=(0, 0, 14))],
        "upper foam pad", "Lay it on the module with its hole over the status LED",
        elev=30, azim=-55, label_done=False)
     st(6, [part("lid")], [part("pipe", explode=(0, 0, -12))], "light pipe into the lid",
        "Seen from below. Push the pipe in from underneath until its top is flush with the top face; clear epoxy; let it cure",
        elev=-35, azim=-55, label_done=True)
-    inside = [B, part("pogo"), part("cell"), part("foam"), part("module"), part("top_foam")]
+    inside = [B, part("pogo"), part("diode"), part("cell"), part("foam"), part("module"), part("top_foam")]
     st(7, inside, [part("gasket", explode=(0, 0, 12))], "gasket onto the rim",
        "Holes over the four screw holes; inside edge flush with the cavity wall",
        elev=30, azim=-55, label_done=False)
@@ -263,7 +267,7 @@ def wiring():
     fig = plt.figure(figsize=(11, 6.6), dpi=150)
     ax = fig.add_axes([0, 0, 1, 1]); ax.set_xlim(0, 110); ax.set_ylim(0, 66); ax.set_axis_off()
     ax.text(2, 64, "TremorTrace prototype: block-level wiring (step 3)", fontsize=13, fontweight="bold", color=INK, va="top")
-    ax.text(2, 60.6, "Four wires in all, 26 AWG stranded silicone. No circuit board; the module carries the charger, IMU, radio and LED.",
+    ax.text(2, 60.6, "Four wires and one small diode, 26 AWG stranded silicone. No circuit board; the module carries the charger, IMU, radio and LED.",
             fontsize=8.5, color=MUT, va="top")
 
     def blk(x, y, w, h, title, sub, color):
@@ -286,13 +290,16 @@ def wiring():
     wire([(26, 42), (42, 42)], RED); lab(34, 44.2, "+ to BAT+, 26 AWG", RED, "center")
     wire([(26, 35), (42, 35)], BLK); lab(34, 32.8, "- to BAT-, 26 AWG", BLK, "center")
     # receptacle to 5V and GND
-    wire([(86, 42), (72, 42)], RED); lab(79, 44.2, "+ to 5V pin", RED, "center")
+    wire([(86, 42), (72, 42)], RED); lab(79, 38.6, "+ to 5V pin", RED, "center")
+    ax.add_patch(FancyBboxPatch((76, 40.6), 6, 2.8, boxstyle="round,pad=0.2", fc="#F3F4F6", ec="#374151", lw=1.4, zorder=4))
+    ax.plot([77.2, 77.2], [40.9, 43.1], color="#374151", lw=1.6, zorder=5)
+    lab(79, 45.4, "diode, band to module", "#374151", "center")
     wire([(86, 35), (72, 35)], BLK); lab(79, 32.8, "- to GND pin", BLK, "center")
     wire([(57, 27), (57, 20)], GRY, 1.2); lab(58, 23.5, "light only", GRY)
-    ax.text(2, 4.2, "Safety: insulate every joint with heat shrink or polyimide tape before the module goes on the cell. Never short the cell leads; "
+    ax.text(2, 6.2, "Safety: insulate every joint with heat shrink or polyimide tape before the module goes on the cell. Never short the cell leads; "
             "cut and solder one lead at a time.", fontsize=7.8, color="#B45309", fontweight="bold")
-    ax.text(2, 1.6, "Charge at the 50 mA setting, never while worn. Load any firmware through the module's USB-C socket before step 8; "
-            "the socket is sealed inside once the lid is on.", fontsize=7.6, color=MUT)
+    ax.text(2, 3.7, "Charge at the 50 mA setting, never while worn. Load the over-the-air bootloader through the module's USB-C socket before step 8;", fontsize=7.6, color=MUT)
+    ax.text(2, 1.4, "Later updates go over Bluetooth; opening the pod is for recovery only.", fontsize=7.6, color=MUT)
     ax.text(108, 64, "BUILD PLAN ILLUSTRATION, PLAN NOT YET BUILT", fontsize=7, color="#B45309", ha="right", va="top")
     ax.text(108, 61.4, "github.com/BoujeeEnjinia1701/tremortrace", fontsize=7, color="#0F766E", ha="right", va="top", family="monospace")
     OUT.mkdir(parents=True, exist_ok=True)

@@ -3,9 +3,9 @@ doc_id: TRT-PRB-001
 title: TremorTrace problem statement
 project: TremorTrace
 doc_type: Problem statement
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,6 +21,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Wrist question closed per TRT-DDR-001; partner question stays open
+- version: "0.4"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Partner question answered by Amish's decision of 2026-10-02 (TRT-DEC-001)
 ---
 
 # TremorTrace problem statement
@@ -57,5 +61,5 @@ Research has shown that a wrist-worn accelerometer and gyroscope can measure tre
 
 ## Open questions
 
-- Which users to involve first, and through which partner (a movement disorders clinic, a patient association, or OpenRatio's network)? No recommendation has been made; proposed, awaiting Amish.
+- Which users to involve first, and through which partner (a movement disorders clinic, a patient association, or OpenRatio's network)? Decided by Amish, 2026-10-02 (TRT-DEC-001): the first candidate to approach is an academic movement disorders clinic with its own ethics board, introduced through the OpenRatio network, with the International Essential Tremor Foundation as the route to participants, shared with StillBand and SteadySleeve; not yet approached.
 - One wrist or both: closed. Decided by Amish, 2026-09-25 (TRT-DDR-001): the most affected wrist first, both wrists later.

@@ -3,7 +3,7 @@ doc_id: TRT-CAL-001
 title: TremorTrace sizing calculations
 project: TremorTrace
 doc_type: Calculation note
-version: "0.3"
+version: "0.4"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -21,6 +21,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: 'Design for construction (TRT-DDR-003): mass 26.2 g, cost USD 43.69; budget treated as a value-engineering target'
+- version: "0.4"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'Schottky diode added to the cost (USD 43.79 over 12 lines) and the mass; no requirement status changed'
 ---
 
 # TremorTrace sizing calculations
@@ -48,7 +52,7 @@ Table 1. Requirement status at TRL 3.
 | R4 | 3 days or more at 16 h of wear per day | 6.3 days nominal, 4.5 days conservative | Met, if the firmware sleeps (0.69 days if it never sleeps) |
 | R5 | 7 days of summaries at 16 h per day, with raw snippet reserve | 9.7 days after a 256 kB raw reserve | Met (6.4 days if the band logs 24 h per day) |
 | R9 | Local storage, owner-controlled export, no cloud | Architecture has no cloud path; web Bluetooth page reads locally | Met (design review) |
-| R10 | Parts cost against the USD 150 value-engineering target, no custom PCB | USD 43.69 over 11 BOM lines, USD 106.31 under the target; module plus hand wiring | Met |
+| R10 | Parts cost against the USD 150 value-engineering target, no custom PCB | USD 43.79 over 12 BOM lines, USD 106.21 under the target; module plus hand wiring | Met |
 | R11 | LED and web Bluetooth page show battery, recording and sync state | RGB LED on the module under a 2 mm light pipe; page defined in TRT-PRC-001 | Met (design review) |
 
 ## 2. Sampling and frequency resolution (R1, R3)
@@ -155,7 +159,7 @@ The total is 3.8 g under the limit, so R6 is met. The strap is still the largest
 
 ## 8. Cost (R10)
 
-Value-engineering target: USD 150 (`budget_usd`, a hypothetical control target, not a limit). Estimated cost of the constructable design: USD 43.69 (USD 106.31 under the target), over 11 priced lines in `bom/bom.csv`. The textile strap is priced at USD 10.00 against USD 8.00 for the silicone strap in v0.1, and two more lid screws added USD 0.50 under TRT-DDR-003. The cell price and size were checked against the Adafruit listing on 2026-09-25; the other prices are indicative and are confirmed at order.
+Value-engineering target: USD 150 (`budget_usd`, a hypothetical control target, not a limit). Estimated cost of the constructable design: USD 43.79 (USD 106.21 under the target), over 12 priced lines in `bom/bom.csv`. The Schottky diode in the charging receptacle's positive lead (TRT-DDR-003 A2) adds USD 0.10 and 0.02 g. The textile strap is priced at USD 10.00 against USD 8.00 for the silicone strap in v0.1, and two more lid screws added USD 0.50 under TRT-DDR-003. The cell price and size were checked against the Adafruit listing on 2026-09-25; the other prices are indicative and are confirmed at order.
 
 ## 9. Sources
 

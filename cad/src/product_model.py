@@ -1,7 +1,7 @@
 """TremorTrace product appearance model (build123d), TRL 3.
 
 Finished-product look for photoreal renders: filleted pod base and lid with the TPU gasket as a
-visible parting line, pan-head lid screws, a lit status light pipe, a raised tremor-trace mark,
+visible parting line, four flush countersunk lid screws, one in each lug horn,, a lit status light pipe, a tremor-trace mark debossed 0.4 mm into the lid,
 side grip ribs, visible internals (module, cell, foam pad, charging receptacle), spring bars, a
 woven two-piece strap with stitching, buckle and keeper, a magnetic charging lead, and the shared
 clay forearm and hand for scale.
@@ -25,7 +25,7 @@ sys.path.insert(0, str(_HERE.parents[1] / ".kit"))
 
 from build123d import (Axis, Box, Cylinder, Ellipse, Plane, Pos, RectangleRounded, Rot, extrude,
                        fillet, loft)
-from model import PARAMS, _derived as derived, build_parts
+from model import PARAMS, _derived as derived, build_parts, _mark_cutter
 
 TITLE = "TremorTrace: wrist-worn motion sensor band for logging tremor"
 
@@ -223,9 +223,15 @@ def _lid(P, D, led_xy):
     z0 = D["base_h"] + P["gasket_t"]
     lid = _prism(X, Y, P["corner_r"], z0, t)
     lid = _fillet_try(lid, _top_edges(lid), [FIL_LID, 0.8, 0.5])
-    for s in (-1, 1):
-        lid -= Pos(0, s * D["screw_y"], z0 + t / 2) * Cylinder(1.1, t + 1)
-        lid -= Pos(0, s * D["screw_y"], z0 + t - 0.25) * Cylinder(2.05, 0.6)     # seat for the pan head
+    from build123d import Cone
+    top = z0 + t
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            x, y = sx * D["screw_x"], sy * D["screw_y"]
+            lid -= Pos(x, y, z0 + t / 2) * Cylinder(P["screw_clear_d"] / 2, t + 1)
+            lid -= Pos(x, y, top - P["head_h"] / 2) * Cone(P["screw_d"] / 2, P["head_d"] / 2, P["head_h"])
+            lid -= Pos(x, y, top + 0.25) * Cylinder(P["head_d"] / 2, 0.5)         # seat for the flush countersunk head
+    lid -= _mark_cutter(P, top)                                                   # tremor-trace mark, debossed 0.4 mm
     lid -= Pos(led_xy[0], led_xy[1], z0 + t / 2) * Cylinder(P["led_d"] / 2, t + 1)
     return lid
 
@@ -249,14 +255,16 @@ def _trace_mark(P, D):
     return _union(segs)
 
 
-def _screw(P, D, y):
+def _screw(P, D, x, y):
+    """Countersunk M2 x 6 screw, head flush with the lid top, with a cross slot."""
+    from build123d import Cone
     z_top = D["base_h"] + P["gasket_t"] + P["lid_t"]
-    head = Pos(0, y, z_top - 0.25 + 0.55) * Cylinder(1.95, 1.1)
-    head = _fillet_try(head, _top_edges(head), [0.5, 0.3])
-    head -= Pos(0, y, z_top + 0.85) * Box(2.2, 0.45, 0.6)
-    head -= Pos(0, y, z_top + 0.85) * Box(0.45, 2.2, 0.6)
-    shank_len = P["screw_len"]
-    head += Pos(0, y, z_top - 0.25 - shank_len / 2) * Cylinder(P["screw_d"] / 2, shank_len)
+    hh, hr = P["head_h"], P["head_d"] / 2
+    head = Pos(x, y, z_top - hh / 2) * Cone(P["screw_d"] / 2, hr, hh)
+    head -= Pos(x, y, z_top) * Box(2.2, 0.45, 0.8)
+    head -= Pos(x, y, z_top) * Box(0.45, 2.2, 0.8)
+    L = P["screw_len"] - hh
+    head += Pos(x, y, z_top - hh - L / 2) * Cylinder(P["screw_d"] / 2, L)
     return head
 
 
@@ -343,13 +351,12 @@ def product_parts(P=PARAMS):
     add("Enclosure base (PETG)", _base(P, D, m), C_BASE, "plastic", 5, "shell", (0, 0, 0))
     add("TPU gasket", m["gasket"], C_GASKET, "rubber", 7, "shell", (0, 0, E_GASKET))
     add("Enclosure lid (PETG)", _lid(P, D, led_xy), C_LID, "plastic", 2, "shell", (0, 0, E_LID))
-    add("Tremor-trace mark", _trace_mark(P, D), C_ACCENT, "painted", 2, "shell", (0, 0, E_LID))
     z_lid = D["base_h"] + P["gasket_t"]
     pipe = Pos(led_xy[0], led_xy[1], z_lid + (P["lid_t"] + 0.15) / 2 - 0.25) * Cylinder(P["led_d"] / 2 - 0.05, P["lid_t"] + 0.4)
     add("Status light pipe (lit)", pipe, C_LIGHT, "emissive", 10, "shell", (0, 0, E_LID + 6))
-    for i, s in enumerate((-1, 1)):
-        add(f"M2 lid screw {i + 1}", _screw(P, D, s * D["screw_y"]), C_METAL, "metal", 9, "shell",
-            (0, 0, E_SCREW))
+    for i, (sx, sy) in enumerate([(-1, -1), (-1, 1), (1, -1), (1, 1)]):
+        add(f"M2 countersunk lid screw {i + 1}", _screw(P, D, sx * D["screw_x"], sy * D["screw_y"]), C_METAL, "metal", 9,
+            "shell", (0, 0, E_SCREW))
     for i, s in enumerate((-1, 1)):
         bar = _x_cyl(0.75, P["strap_w"] + 2.0, 0, s * (Y / 2 - P["bar_inset"]), P["bar_z"])
         bar += _x_cyl(0.55, P["strap_w"] + 3.0, 0, s * (Y / 2 - P["bar_inset"]), P["bar_z"])
@@ -383,6 +390,8 @@ def product_parts(P=PARAMS):
     pogo, pogo_pins = _pogo(P, D)
     add("Magnetic charging receptacle", pogo, C_DARK, "plastic", 6, "internal", (0, 0, -14))
     add("Charging contacts", pogo_pins, C_GOLD, "metal", 6, "internal", (0, 0, -14))
+
+    add("Schottky diode, receptacle lead (BOM line 12)", m["diode"], C_DARK, "plastic", 12, "internal", (0, 0, -6))
 
     # ---- accessory: magnetic charging lead
     lead, lead_metal = _charging_lead(P, D)

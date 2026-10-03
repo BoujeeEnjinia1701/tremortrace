@@ -3,9 +3,9 @@ doc_id: TRT-DDR-001
 title: TremorTrace TRL 2 review decisions
 project: TremorTrace
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,12 +17,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: O1 to O3 recorded as decided by Amish on 2026-10-02
 ---
 
 # 0001: TRL 2 review decisions
 
 - **Date:** 2026-09-25
-- **Status:** accepted (items D1 to D5, and O4 through TRT-DDR-002); items O1 to O3 remain proposed
+- **Status:** accepted (items D1 to D5, and O4 through TRT-DDR-002); items O1 to O3 decided by Amish on 2026-10-02 (TRT-DEC-001)
 
 ## Context
 
@@ -50,11 +54,11 @@ Table 1. Items with a recommendation.
 
 Budget and pitch: the TRL 2 review made no recommendation to change either, so `budget_usd` stays at $150 and the pitch and problem lines are unchanged.
 
-Items that remain open (no recommendation was made, so they stay "Proposed, awaiting Amish"):
+Items left open on 2026-09-25 (no recommendation was made); all three were decided on 2026-10-02 (TRT-DEC-001):
 
-- **O1.** First co-design and validation partner: a movement disorders clinic, a patient association, or the OpenRatio network. No recommendation; portfolio guidance is that community designs pick co-design partners per area later. Proposed, awaiting Amish.
-- **O2.** Confirmation of "OpenRatio" as a possible partner (part of O1). Proposed, awaiting Amish.
-- **O3.** Approval of kit 1.3.1, whose forearm-for-scale rule for small objects replaces the 1.75 m person in the concept media. No recommendation was stated in the review. Proposed, awaiting Amish.
+- **O1.** First co-design and validation partner: a movement disorders clinic, a patient association, or the OpenRatio network. **Decided by Amish, 2026-10-02:** the first candidate to approach is an academic movement disorders clinic with its own ethics board, introduced through the OpenRatio network, with the International Essential Tremor Foundation as the route to participants, shared with StillBand and SteadySleeve.
+- **O2.** Confirmation of "OpenRatio" as a possible partner (part of O1). **Decided by Amish, 2026-10-02:** confirmed, described in soft, non-clinical wording as a research and educational network.
+- **O3.** Approval of kit 1.3.1, whose forearm-for-scale rule for small objects replaces the 1.75 m person in the concept media. **Decided by Amish, 2026-10-02:** approved.
 
 New item raised at TRL 3 (not part of the 2026-09-25 decision):
 

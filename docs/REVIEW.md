@@ -261,3 +261,76 @@ Knock-on: mass 26.2 g (was 25.4 g), still 3.8 g under the 30 g R6 limit. Value-e
 ### Recommended next step
 
 Amish reviews TRT-DDR-003 and the register. TRL 4 (building to TRT-BLD-001 and recording the first checks) remains on hold by his instruction.
+
+## Session 2026-10-02: open decisions decided
+
+Amish, 2026-10-02: "APPROVED: The open decisions from the last wave (TremorTrace to ZeerBox) came in after the review and aren't on the page either." This approves the recommendation written for each open decision in the design decisions register (TRT-DEC-001), as he did for the other 555 open decisions ("i approve your recommendations for all 555 open decisions."). trl stays 3; no build or test work was done, and the model, BOM quantities and prices, and pictures are unchanged.
+
+### Decisions recorded
+
+Ten decisions, all moved to Decisions made in TRT-DEC-001, dated 2026-10-02:
+
+1. Design for construction accepted: the changes C1 to C9 of TRT-DDR-003, as made.
+2. Firmware update route: over Bluetooth with the nRF52840's over-the-air bootloader; opening the pod, with a new gasket, is kept for recovery only.
+3. Skin-side charging contacts: a small Schottky diode is fitted in the receptacle's positive lead on every band, and the bought module's 5 V pin is still checked dead with the cell connected and no charger; the diode is dropped only if measurements show the pin dead in every operating state.
+4. First co-design and validation partner: the first candidate to approach is an academic movement disorders clinic with its own ethics board, introduced through the OpenRatio network, with the International Essential Tremor Foundation as the route to participants, shared with StillBand and SteadySleeve. No prototype is worn without clinical oversight and ethics approval.
+5. OpenRatio confirmed as a named possible partner, described in soft, non-clinical wording as a research and educational network, not a clinical service.
+6. Kit 1.3.1 approved: concept media for small objects show a forearm for scale instead of the 1.75 m person.
+7. Strap path: the circular strap stays in the parametric model for the drawing and mass; the elliptical wrist path is used in renders only.
+8. Lid mark and grip ribs kept as printed-in features at no cost, with the mark debossed 0.4 mm (two 0.2 mm layers) into the 1.5 mm lid.
+9. Module detail and charging lead in the renders accepted as illustration only.
+10. Tremor during a reach: the separate activity flag is kept and tremor is reported both with and without it; a classifier is chosen at TRL 4 from recorded data.
+
+### Documents changed
+
+- `docs/06-design-decisions.md` (TRT-DEC-001 v0.2): open decisions moved to Decisions made; the 2026-09-30 row and confirm item 5 updated.
+- `docs/decisions/0003-design-for-construction.md` (TRT-DDR-003 v0.2): acceptance recorded in the status line; A1 and A2 decided (status stays Draft).
+- `docs/decisions/0001-trl2-review-decisions.md` (TRT-DDR-001 v0.3) and `docs/decisions/0002-recommendations-accepted.md` (TRT-DDR-002 v0.2): O1 to O3 recorded as decided.
+- `docs/02-concept.md` (TRT-PRC-001 v0.7): partner and activity-flag open questions answered.
+- `docs/01-problem.md` (TRT-PRB-001 v0.4): partner open question answered.
+
+### Follow-up actions to carry approved decisions into the design
+
+1. Decision 3 (model): Add the Schottky diode in the charging receptacle's positive lead to the model's wiring and the TRT-DDR-003 wiring description, and check it fits beside the module in the cavity.
+2. Decision 3 (BOM): Add the Schottky diode (a small SOD-123 or axial part, a few cents) to the BOM and the parts total.
+3. Decision 3 (pictures): Redraw the wiring diagram and wiring step of the build plan (TRT-BLD-001) with the diode, and add it to safety stop S3's polarity check.
+4. Decision 3 (calculations): Add the diode to the cost in TRT-CAL-001 and the Value engineering section when sizing.py is next run.
+5. Decision 8 (model): Model the lid mark as a 0.4 mm deboss in the lid and the grip ribs of the appearance model on the base, then regenerate STEP, STL and drawing TRT-DWG-002.
+6. Decisions 1 and 8 (pictures): Update the appearance model and photoreal renders, card and social preview on Amish's Mac: four flush countersunk screws in the lug horns (C2) and the 0.4 mm debossed mark.
+7. Decision 2 (docs): State in the firmware sketch notes and the build plan's firmware step that the over-the-air bootloader is loaded before the lid is closed, and that opening the pod is for recovery only.
+8. Decisions 4 and 5 (docs): Approach an academic movement disorders clinic through the OpenRatio network, with the International Essential Tremor Foundation for participants, jointly with StillBand and SteadySleeve.
+
+### Points found in the review
+
+- Item 6 (kit 1.3.1) is already applied in practice: the concept media use the forearm and the kit's CLAUDE.md names TremorTrace as the worked example, so the decision only records what is done.
+- Item 8's 0.14 mm mark height is below one print layer (0.2 mm); the recommendation restates it as a 0.4 mm deboss.
+- The appearance model, photoreal renders, card and social preview still show two pan-head screws on the center line, which change C2 replaced with four flush countersunk screws.
+
+## Session 2026-10-02: approved follow-ups carried out
+
+Amish approved all follow-up actions on 2026-10-02. Done: 6 of 8 in full, 1 in part (scenes exported, photoreal images made on Amish's Mac), 1 not done (outreach). No requirement changed status. trl stays 3. TremorTrace remains a research and educational prototype, not a medical device.
+
+### Follow-ups
+
+1. Decision 3, model: done. A SOD-123 Schottky diode lies on the base floor 8.5 mm to one side of the receptacle opening, 3.2 mm from the receptacle and 3.5 mm or more from the module and cell; the wiring description is in TRT-DDR-003. 38 of 38 constructability checks pass (9 new). STEP and STL regenerated.
+2. Decision 3, BOM: done. Line 12, Schottky diode, USD 0.10 (a few cents each in volume, USD 0.10 allowance for a single buy). Parts total USD 43.79.
+3. Decision 3, pictures: done. Wiring diagram (Figure 11), steps 1 and 4, safety stop S3 (diode check with the meter) and joint 5 redrawn or reworded; the diode also appears in steps 5, 7 and 8 and the overview.
+4. Decision 3, calculations: done. TRT-CAL-001 v0.4 cost: Value-engineering target: USD 150. Estimated cost of the constructable design: USD 43.79 (USD 106.21 under the target). Mass 26.2 g (diode 0.02 g), margin 3.8 g. `budget_usd` unchanged.
+5. Decision 8, model: done. The lid mark is a 0.4 mm deboss in the 1.5 mm lid (1.1 mm left under it), clear of the light pipe and screws; grip ribs remain on the base in the appearance model. TRT-DWG-002 Rev P4, TRT-DWG-102 sketch note.
+6. Decisions 1 and 8, renders: scenes done, photoreal images, card and social preview not done (made on Amish's Mac). `cad/src/product_model.py` now shows four flush countersunk screws in the lug horns, the debossed mark and the diode. Scenes exported to `/home/claude/renders/tremortrace` (hero, exploded, detail).
+7. Decision 2, docs: done in the build plan (step 3 and the wiring picture) and TRT-DDR-003: the over-the-air bootloader is loaded before the lid is closed; opening the pod, with a new gasket, is for recovery only. There are no firmware sketch notes in the repo (`firmware/` is empty under the TRL 3 cap), so none were edited.
+8. Decisions 4 and 5, outreach: not done: outreach to a clinic through the OpenRatio network is Amish's action.
+
+### Documents changed
+
+- `bom/bom.csv`, `bom/bom-notes.md`; `cad/src/model.py`, STEP and STL; `cad/src/product_model.py`; `cad/src/sheets.py` (TRT-DWG-002 Rev P4); pictures from `cad/src/build_plan_media.py`
+- `docs/04-calcs/sizing.py` and TRT-CAL-001 v0.4; TRT-BLD-001 v0.2; TRT-REQ-001 v0.6 (R10 cost); TRT-DEC-001 v0.3; TRT-PRC-001 v0.8; TRT-DDR-003 v0.3; `README.md`
+
+### Cross-repo actions
+
+- Outreach to an academic movement disorders clinic is shared with StillBand and SteadySleeve (Amish).
+
+
+## 2026-10-02: photoreal renders redone on the constructable design
+
+Rendered with Blender Cycles on Amish's Mac from the updated appearance model; captioned with `.kit/photo_caption.py`; `media/card.png` and `media/social-preview.png` regenerated with `.kit/cards.py`. Views: hero, exploded, detail. image_qc passes. Appearance deviations are those logged above as proposed, awaiting Amish.

@@ -3,9 +3,9 @@ doc_id: TRT-DDR-002
 title: TremorTrace recommendations accepted
 project: TremorTrace
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,12 +13,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Record Amish's acceptance of all open recommendations (2026-09-25)
+- version: "0.2"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: O1 to O3 recorded as decided by Amish on 2026-10-02
 ---
 
 # 0002: Recommendations accepted
 
 - **Date:** 2026-09-25
-- **Status:** accepted (items D6 and D7); items O1 to O3 remain proposed
+- **Status:** accepted (items D6 and D7); items O1 to O3 decided by Amish on 2026-10-02 (TRT-DEC-001)
 
 ## Context
 
@@ -40,13 +44,13 @@ Budget and pitch: no recommendation proposed a change to either, so `budget_usd`
 - **D6.** TRT-CAL-001 v0.2, section 5: the 50 mA setting is recorded as decided and as a firmware rule. TRT-REQ-001 v0.4, R4 names the 50 mA recharge setting. TRT-PRC-001 v0.5 records the decision. Drawing TRT-DWG-002 Rev P2 notes "Charge at 50 mA". `docs/04-calcs/sizing.py` marks the setting as decided.
 - **D7.** `bom/bom.csv` item 1 is now a woven textile strap, about 8 g, $10.00 (was silicone, about 12 g, $8.00); parts total $43.19 (was $41.19). `cad/src/model.py` strap thickness 1.4 mm (was 2.5 mm); STEP and STL re-exported. `docs/04-calcs/sizing.py` strap mass 8 g (was 12 g). TRT-CAL-001 v0.2: mass 25.4 g (was 29.4 g), margin 4.6 g (was 0.6 g), R6 met (was at risk). TRT-REQ-001 v0.4: R6 met. TRT-PRC-001 v0.5: component table, key numbers and design choices updated. TRT-DWG-002 Rev P2 (was P1): parts list names the textile strap. Concept media regenerated with the new key figures.
 
-## Items still open
+## Items left open on 2026-09-25 (decided 2026-10-02)
 
-These carried no recommendation, so they stay "Proposed, awaiting Amish":
+These carried no recommendation on 2026-09-25; Amish decided all three on 2026-10-02 (TRT-DEC-001):
 
-- **O1.** First co-design and validation partner: a movement disorders clinic, a patient association, or the OpenRatio network. Proposed, awaiting Amish.
-- **O2.** Confirmation of "OpenRatio" as a possible partner (part of O1). Proposed, awaiting Amish.
-- **O3.** Approval of kit 1.3.1 (forearm-for-scale rule for small objects in the concept media). Proposed, awaiting Amish.
+- **O1.** First co-design and validation partner: a movement disorders clinic, a patient association, or the OpenRatio network. **Decided 2026-10-02:** an academic movement disorders clinic with its own ethics board, introduced through the OpenRatio network, with the International Essential Tremor Foundation as the route to participants, shared with StillBand and SteadySleeve, as the first candidate to approach.
+- **O2.** Confirmation of "OpenRatio" as a possible partner (part of O1). **Decided 2026-10-02:** confirmed, in soft, non-clinical wording.
+- **O3.** Approval of kit 1.3.1 (forearm-for-scale rule for small objects in the concept media). **Decided 2026-10-02:** approved.
 
 ## Consequences
 

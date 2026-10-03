@@ -3,7 +3,7 @@ doc_id: TRT-BLD-001
 title: TremorTrace prototype build plan
 project: TremorTrace
 doc_type: Build plan
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -13,6 +13,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: First build plan; design made constructable (TRT-DDR-003)
+  - version: "0.2"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: 'Schottky diode added to the wiring, step 1, step 4 and safety stop S3; firmware loaded before the lid is closed, updates over Bluetooth; pictures redrawn (TRT-DEC-001, 2026-10-02)'
 ---
 
 # TremorTrace prototype build plan
@@ -27,7 +31,7 @@ revisions:
 
 *Figure 1. Every component pulled apart and numbered in build order; only the looped ends of the two strap halves are drawn.*
 
-The prototype is one TremorTrace band: a small printed pod, 30 mm along the forearm, 40 mm across the wrist and 12 mm high, on a standard 22 mm two-piece watch strap. Inside the pod a bought module (which carries the motion sensor, radio, memory, charger and status light) sits on a flat 150 mAh cell, with a foam pad above and below so the lid clamps the stack. A magnetic charging receptacle is set into the floor, and a short clear rod in the lid carries the status light out. Figure 1 shows the 12 components in the order you make or fit them. Four are made: the base, the lid with its light pipe and the gasket are 3D printed, and the two foam pads are cut from sheet. The rest are bought and fitted: the module, cell, receptacle, screws, spring bars and strap. The work is printing PETG and TPU, drilling small holes by hand, cutting foam, soldering four wires and mixing a little epoxy. The parts cost about USD 44 from the bill of materials.
+The prototype is one TremorTrace band: a small printed pod, 30 mm along the forearm, 40 mm across the wrist and 12 mm high, on a standard 22 mm two-piece watch strap. Inside the pod a bought module (which carries the motion sensor, radio, memory, charger and status light) sits on a flat 150 mAh cell, with a foam pad above and below so the lid clamps the stack. A magnetic charging receptacle is set into the floor, and a short clear rod in the lid carries the status light out. Figure 1 shows the 13 components in the order you make or fit them. Four are made: the base, the lid with its light pipe and the gasket are 3D printed, and the two foam pads are cut from sheet. The rest are bought and fitted: the module, cell, receptacle, screws, spring bars and strap. The work is printing PETG and TPU, drilling small holes by hand, cutting foam, soldering four wires and one small diode and mixing a little epoxy. The parts cost about USD 44 from the bill of materials.
 
 ## 2. What changed to make it buildable
 
@@ -43,6 +47,7 @@ The concept showed what the band does; some of its parts could not be made or fi
 | Charging receptacle | Sat in a floor hole with no fixing | A printed collar round the hole, filled with epoxy (Figure 4) | The epoxy both holds and seals the only hole through the skin side |
 | Cell | Free to slide inside the pod | Three low printed ribs make a pocket 0.3 mm larger than the cell (Figure 3) | The cell stays put and the wires have room beside it |
 | Module | Floated with a 1.7 mm gap under the lid | A 2 mm foam pad above it, squeezed by the lid (Figure 7) | The lid clamps the whole stack; nothing rattles |
+| Charging receptacle lead | Receptacle wired straight to the module's 5 V and ground pins | A small Schottky diode in the receptacle's red lead, glued to the floor beside the collar (Figure 11) | The contacts touch the skin; the diode blocks any voltage from the module reaching them |
 | Cell plug | A plug with no room for it in the pod | Plug cut off; leads soldered to the module's battery pads (Figure 11) | Nothing bulky in the 9.5 mm high cavity |
 | Light pipe and gasket | A bore with no rod; a gasket drawn only squeezed | A 2 mm clear rod set in epoxy; a gasket printed 0.8 mm thick that squeezes to 0.5 mm | Every part is now drawn and checked for fit |
 
@@ -155,6 +160,7 @@ Buy to specification, not brand. Line numbers are those of the bill of materials
 - **Controller and motion sensor module (line 3).** nRF52840 module with a six-axis motion sensor, 2 MB flash, a single-cell charger with a 50 mA setting, battery pads and a status light, about 21 x 17.8 x 3.5 mm (XIAO nRF52840 Sense class).
 - **Cell (line 4).** 150 mAh lithium polymer, 3.7 V, with its own protection circuit, about 19.75 x 26.02 x 3.8 mm, from a maker that publishes a datasheet and allows charging at 150 mA or less.
 - **Charging receptacle (line 6).** Two-contact magnetic receptacle about 4 x 8 x 3 mm, sold with its matching USB charging cable.
+- **Schottky diode (line 12).** SOD-123 surface-mount or similar small part, 1 A, 30 V or higher, forward drop 0.4 V or less at 50 mA; glued to the base floor and soldered into the receptacle's red lead.
 - **Lid screws (line 9).** Four M2 x 6 countersunk thread-forming screws for plastics, stainless.
 - **Spring bars (line 8).** 22 mm quick-release bars with a 1.5 mm body and tips of about 0.9 mm (one pair usually comes with the strap; keep the spare pair).
 - **Strap (line 1).** 22 mm two-piece quick-release woven textile strap, skin-safe and washable, about 8 g.
@@ -169,7 +175,7 @@ In each picture the parts already fitted are grey and the part being fitted is i
 
 ![Step 1](05-build-plan/step-01.png)
 
-Solder a 40 mm red lead to the receptacle's positive contact and a black lead to its negative contact, and cover both joints with heat shrink. Feed the leads up through the floor opening from underneath and push the receptacle up until its contacts are flush with the underside. Fill the collar round it with clear epoxy, keeping epoxy off the contacts, and let it cure flat for the full time on the pack.
+Solder a 40 mm red lead to the receptacle's positive contact and a black lead to its negative contact. Cut the red lead 15 mm from the receptacle and solder the Schottky diode between the two pieces, with its marked end (the band) toward the module. Cover every joint with heat shrink. Feed the leads up through the floor opening from underneath and push the receptacle up until its contacts are flush with the underside. Fill the collar round it with clear epoxy, keeping epoxy off the contacts, and let it cure flat for the full time on the pack.
 
 ### Step 2: cell into its pocket
 
@@ -181,15 +187,15 @@ Solder a 40 mm red lead to the receptacle's positive contact and a black lead to
 
 ![Figure 11. Block-level wiring](05-build-plan/wiring.png)
 
-*Figure 11. Four wires in all: cell to the module's battery pads, receptacle to the module's 5 V and ground pins.*
+*Figure 11. Four wires and one diode: cell to the module's battery pads, receptacle through the diode to the module's 5 V pin and straight to its ground pin.*
 
-With the module outside the pod, solder the cell's red lead to the battery positive pad and its black lead to the battery negative pad, one lead at a time; then the receptacle's red lead to the 5 V pin and its black lead to a ground pin. Keep each lead just long enough to reach with the module lifted out beside the pod. Cover every joint with heat shrink or polyimide tape. Load any firmware through the module's USB-C socket now: the socket is sealed inside once the lid is on. **Hold point:** safety stops S3 and S4.
+With the module outside the pod, solder the cell's red lead to the battery positive pad and its black lead to the battery negative pad, one lead at a time; then the receptacle's red lead (the end beyond the diode) to the 5 V pin and its black lead to a ground pin. Keep each lead just long enough to reach with the module lifted out beside the pod. Cover every joint with heat shrink or polyimide tape. Load the over-the-air bootloader (and the first firmware) through the module's USB-C socket now, before the lid is closed: the socket is sealed inside once the lid is on. Later updates go over Bluetooth; opening the pod, with a new gasket, is for recovery only. **Hold point:** safety stops S3 and S4.
 
 ### Step 4: lower foam pad and module
 
 ![Step 4](05-build-plan/step-04.png)
 
-Stick the lower pad on the cell, peel its top liner, and press the wired module onto it, status light toward the strap end with the light pipe. Tuck the wires into the gaps beside the cell, clear of the gasket rim.
+Stick the lower pad on the cell, peel its top liner, and press the wired module onto it, status light toward the strap end with the light pipe. Glue the diode flat on the floor beside the receptacle collar, 8.5 mm to one side of the opening, with a drop of epoxy, before the module goes in. Tuck the wires into the gaps beside the cell, clear of the gasket rim.
 
 ### Step 5: upper foam pad
 
@@ -246,7 +252,7 @@ Stop at each point. Carry on only when everything listed is true.
 
 - **S1. Before the cell comes into the workshop.** The cell has its own protection circuit and a datasheet from its maker; its voltage is 3.0 to 4.2 V; it has no swelling, dents or leaks. A charging spot is ready on a non-combustible surface (a ceramic tile or steel tray), away from anything that burns.
 - **S2. Before the cell's plug is cut.** Cut one lead at a time and tape the bare end at once; never let the two leads touch, and never cut both together with one snip.
-- **S3. Before the module is powered from the cell.** Check with a meter, not by wire colour, that the cell's positive lead goes to the battery positive pad and the receptacle's positive lead to the 5 V pin. Every joint is covered.
+- **S3. Before the module is powered from the cell.** Check with a meter, not by wire colour, that the cell's positive lead goes to the battery positive pad and the receptacle's positive lead, through the diode, to the 5 V pin. The diode's marked end faces the module (check with the meter's diode range: it reads about 0.2 to 0.4 V from the receptacle toward the module and open the other way). Every joint is covered.
 - **S4. Before the first charge.** The firmware has selected the 50 mA setting (or the module's default is confirmed as 50 mA). The first charge is attended the whole time, lid off, on the charging spot; the cell is checked by touch every 15 minutes. Stop if the cell becomes warm or swells. Never charge the band while it is worn.
 - **S5. Before the lid goes on.** No wire crosses the gasket rim or presses on a sharp edge of the cell; the cell is seated flat in its pocket; nothing is pinched under the module.
 - **S6. Before the band is worn.** The pod is closed and the screws are flush; the strap is held; the receptacle contacts read 0 V with no charger attached; the wearer understands this is a research and educational prototype, not a medical device. Check the skin under the band after the first hours of wear and stop if there is any redness, irritation or warmth.
@@ -263,10 +269,10 @@ Stop at each point. Carry on only when everything listed is true.
 
 ## 8. Where the numbers come from
 
-- Model and constructability checks: `cad/src/model.py` (`python cad/src/model.py --check`, 29 checks); STEP and STL exports in `cad/step/` and `cad/stl/`.
+- Model and constructability checks: `cad/src/model.py` (`python cad/src/model.py --check`, 38 checks); STEP and STL exports in `cad/step/` and `cad/stl/`.
 - Pictures: `cad/src/build_plan_media.py`, using `.kit/build_views.py`; written to `docs/05-build-plan/` and `cad/drawings/TRT-DWG-101` to `TRT-DWG-104`.
 - General arrangement: `cad/drawings/TRT-DWG-002.pdf`, Rev P3.
-- Calculations: `docs/04-calcs/01-sizing.md` (TRT-CAL-001 v0.3) and `docs/04-calcs/sizing.py`; mass in section 7, charging in section 5.
+- Calculations: `docs/04-calcs/01-sizing.md` (TRT-CAL-001 v0.4) and `docs/04-calcs/sizing.py`; mass in section 7, charging in section 5.
 - Bill of materials: `bom/bom.csv` and `bom/bom-notes.md`.
 - Decisions: `docs/decisions/0003-design-for-construction.md` (TRT-DDR-003), with TRT-DDR-001 and TRT-DDR-002; open items in `docs/06-design-decisions.md` (TRT-DEC-001).
-- Requirements: `docs/03-requirements.md` (TRT-REQ-001 v0.5).
+- Requirements: `docs/03-requirements.md` (TRT-REQ-001 v0.6).

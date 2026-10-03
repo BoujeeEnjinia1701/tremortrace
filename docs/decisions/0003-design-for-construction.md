@@ -3,7 +3,7 @@ doc_id: TRT-DDR-003
 title: TremorTrace design for construction
 project: TremorTrace
 doc_type: Design decision record
-version: "0.1"
+version: "0.3"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -13,12 +13,20 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: Changes that make the concept physically buildable, with the reason for each; made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review
+- version: "0.2"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Accepted by Amish on 2026-10-02, with A1 (over-the-air updates) and A2 (Schottky diode on every band) decided
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'A2 diode carried into the model, BOM and wiring picture; wiring description added'
 ---
 
 # 0003: Design for construction
 
 - **Date:** 2026-10-02
-- **Status:** Draft. The changes in Tables 1 and 2 were made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review. The items in Table 3 are Proposed, awaiting Amish.
+- **Status:** Draft; accepted. Amish, 2026-10-02: "APPROVED: The open decisions from the last wave (TremorTrace to ZeerBox) came in after the review and aren't on the page either." This approves the recommendation written for each open decision in the design decisions register (TRT-DEC-001 v0.1): every change in Tables 1 and 2 is accepted as made, and A1 and A2 in Table 3 are decided as recorded there.
 
 > **Safety:** TremorTrace is a research and educational prototype, not a medical device. It carries a lithium polymer cell against the skin: use a protected cell, never charge while worn, and stop use if the pod becomes warm or swollen.
 
@@ -49,17 +57,21 @@ The changes keep what the band does: the same 30 x 40 x 12 mm pod, the same modu
 | Item | Change | Reason |
 | --- | --- | --- |
 | Mass | 26.2 g (was 25.4 g), 3.8 g under the R6 limit of 30 g (TRT-CAL-001 v0.3, section 7). | Two more screws, the upper foam pad, epoxy, and the ribs and collar in the base. |
-| Cost | BOM lines 2, 4, 5, 7, 8, 9 and 11 updated; line 9 is now four screws. Estimated cost of the constructable design: USD 43.69 (was USD 43.19), USD 106.31 under the USD 150 value-engineering target (`budget_usd`, unchanged). | Parts added for construction. |
+| Cost | BOM lines 2, 4, 5, 7, 8, 9 and 11 updated; line 9 is now four screws. Estimated cost of the constructable design: USD 43.79 (was USD 43.19 before construction, USD 43.69 before the diode), USD 106.21 under the USD 150 value-engineering target (`budget_usd`, unchanged). | Parts added for construction; line 12 (Schottky diode, USD 0.10) added on 2026-10-02. |
 | Drawings | TRT-DWG-002 Rev P3 (was P2); making sketches TRT-DWG-101 to 104 added. | Follows the model. |
 | Documents | TRT-CAL-001 v0.3, TRT-REQ-001 v0.5, TRT-PRC-001 v0.6: mass, cost and component figures updated. No requirement changed status. New: TRT-BLD-001 (build plan) and TRT-DEC-001 (design decisions register). | Follows the model. |
 | Media | Concept media regenerated from the model (`cad/src/concept_media.py`). | Follows the model. |
 
-*Table 3. Proposed, awaiting Amish.*
+*Table 3. Decided by Amish, 2026-10-02.*
 
 | # | Question | Options | Recommendation |
 | --- | --- | --- | --- |
-| A1 | Once the lid is on, the module's USB-C socket is sealed inside the pod, so firmware cannot be loaded through it without opening the pod (and replacing the gasket). | (a) load firmware over Bluetooth with the nRF52840's over-the-air bootloader; (b) open the pod for each update. | (a), keeping (b) for recovery. It changes how the band is maintained, so it is Amish's decision. |
-| A2 | The charging receptacle's two contacts touch the skin while the band is worn. They are wired to the module's 5 V and ground pins, which should carry no voltage when no charger is attached, but this depends on the module's circuit. | (a) confirm on the bought module that the 5 V pin is dead with the cell connected and no charger, and add nothing; (b) add a small Schottky diode in the receptacle's positive lead in any case. | (a), with (b) if the pin is found live. This touches the safety case, so it is Amish's decision. |
+| A1 | Once the lid is on, the module's USB-C socket is sealed inside the pod, so firmware cannot be loaded through it without opening the pod (and replacing the gasket). | (a) load firmware over Bluetooth with the nRF52840's over-the-air bootloader; (b) open the pod for each update. | (a), keeping (b) for recovery. **Decided by Amish, 2026-10-02: (a), with (b) for recovery only.** |
+| A2 | The charging receptacle's two contacts touch the skin while the band is worn. They are wired to the module's 5 V and ground pins, which should carry no voltage when no charger is attached, but this depends on the module's circuit. | (a) confirm on the bought module that the 5 V pin is dead with the cell connected and no charger, and add nothing; (b) add a small Schottky diode in the receptacle's positive lead in any case. | (b), with (a) as a check: fit the diode on every band and still confirm the pin is dead; drop the diode only if measurements show the pin dead in every operating state. **Decided by Amish, 2026-10-02.** The diode is in the model (SOD-123 on the base floor beside the receptacle collar, 3.2 mm from the receptacle), the BOM (line 12) and the wiring picture (follow-up in `docs/REVIEW.md`, 2026-10-02). |
+
+## Wiring as built in the model
+
+The charging receptacle's red lead passes through a Schottky diode (SOD-123, 1.6 x 2.7 x 1.1 mm, marked end toward the module) on its way to the module's 5 V pin; the black lead goes straight to a ground pin. The diode lies on the base floor 8.5 mm to one side of the receptacle opening, 3.2 mm from the receptacle and 3.5 mm or more from the module and cell (checked in `cad/src/model.py`). The over-the-air bootloader is loaded through the module's USB-C socket before the lid is closed; opening the pod is for recovery only (A1).
 
 ## Consequences
 

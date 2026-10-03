@@ -19,12 +19,13 @@ pod = model.build()
 work = ROOT / "cad" / "drawings" / "_views"
 views = project_views(pod, work)
 
-s = Sheet(project="TremorTrace", title="Wrist pod general arrangement", dwg_no="TRT-DWG-002", rev="P3",
+s = Sheet(project="TremorTrace", title="Wrist pod general arrangement", dwg_no="TRT-DWG-002", rev="P4",
           author="Amish Chadha", date="2026-10-02", scale=2.0, concept=True,
           material="Base and lid PETG, gasket TPU 95A; bought parts per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
           revisions=[("P1", "General arrangement for TRL 3 (TRT-CAL-001)", "2026-09-25", "AC"),
                      ("P2", "Textile strap, charge at 50 mA (TRT-DDR-002)", "2026-09-25", "AC"),
-                     ("P3", "Design for construction (TRT-DDR-003)", "2026-10-02", "AC")])
+                     ("P3", "Design for construction (TRT-DDR-003)", "2026-10-02", "AC"),
+                     ("P4", "Schottky diode in the charging lead; lid mark debossed 0.4 mm", "2026-10-02", "AC")])
 s.add_ortho(views, ["front", "top", "right"])
 s.add_svg(views["iso"], 276, 32, 140, 78, label="Isometric view", sublabel="Not to scale; strap omitted")
 cx, cy, cz = p["cell"]
@@ -39,6 +40,7 @@ s.add_notes("Main dimensions (mm)", [
     f"Lid screws 4 x M2 x {p['screw_len']:.0f} countersunk, one per horn, {p['screw_x']:.0f} and {p['screw_y']:.1f} from center",
     f"Cell {cx:.2f} x {cy:.2f} x {cz:.1f}; module {mx:.1f} x {my:.0f} x {mz:.1f}",
     f"Charging opening {p['pogo'][0]:.0f} x {p['pogo'][1]:.0f} in floor with glue collar; LED bore {p['led_d']:.0f} dia",
+    f"Diode on the floor {p['diode_y']:.1f} to one side of the opening; lid mark debossed {p['mark_depth']:.1f} deep",
     f"Cell ribs {p['rib_h']:.1f} high, {p['cell_gap']:.1f} clear; upper foam pad {p['top_foam_t']:.1f} compressed",
 ], x=276, y=124, width=140)
 s.add_notes("Parts list (items match bom/bom.csv)", [
@@ -55,6 +57,7 @@ s.add_notes("Parts list, continued", [
     "9 Lid screws, 4 x M2 x 6 countersunk",
     "10 Light pipe, 2 mm",
     "11 Consumables (foam pads, epoxy)",
+    "12 Schottky diode, SOD-123, in the receptacle lead",
     "Charge at 50 mA. Never charge while worn.",
     "Not a medical device.",
 ], x=124, y=222, width=100)

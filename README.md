@@ -2,7 +2,7 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![DOI](https://zenodo.org/badge/1386352982.svg)](https://zenodo.org/badge/latestdoi/1386352982) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/tremortrace/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/tremortrace/actions/workflows/reuse.yml) [![Archived in Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/BoujeeEnjinia1701/tremortrace/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/BoujeeEnjinia1701/tremortrace)
 
-**Area:** BioMedical · **TRL:** 3 of 9 (proof of concept by calculation) · **Value-engineering target:** USD 150 (estimated cost USD 43.69) · **Difficulty:** 2 of 5
+**Area:** BioMedical · **TRL:** 3 of 9 (proof of concept by calculation) · **Value-engineering target:** USD 150 (estimated cost USD 43.79) · **Difficulty:** 2 of 5
 
 Wrist-worn IMU band that logs tremor frequency and amplitude continuously, with an open analysis notebook that produces a daily tremor profile.
 
@@ -65,7 +65,7 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md)
 - Printed PETG enclosure with TPU gasket, 40 x 30 x 12 mm
 - 22 mm woven textile strap, about 8 g
 
-The priced bill of materials (USD 43.69 in parts, against a USD 150 value-engineering target) is in [bom/bom.csv](bom/bom.csv).
+The priced bill of materials (USD 43.79 in parts, against a USD 150 value-engineering target) is in [bom/bom.csv](bom/bom.csv).
 
 ## Status at TRL 3
 
@@ -75,7 +75,7 @@ Calculations in [TRT-CAL-001](docs/04-calcs/01-sizing.md) show 0.1 Hz frequency 
 
 ![TremorTrace prototype: every component pulled apart and numbered in build order](docs/05-build-plan/overview.png)
 
-The [prototype build plan](docs/05-build-plan.md) (TRT-BLD-001) shows, in pictures, how to make each of the twelve components and put them together in nine steps; nothing has been built yet. The base, lid and gasket are 3D printed, two foam pads are cut from sheet, and the module, cell, charging receptacle, screws, spring bars and strap are bought; the electronics are four soldered wires. Writing the plan made the design buildable: the spring bar holes, lid screws and strap notches were redesigned, and cell ribs, a glue collar for the charging receptacle and foam pads that let the lid clamp the stack were added (TRT-DDR-003, open for Amish's review). Every picture is drawn from the model, and the model checks that each part touches what it should and clears what it should not.
+The [prototype build plan](docs/05-build-plan.md) (TRT-BLD-001) shows, in pictures, how to make each of the thirteen components and put them together in nine steps; nothing has been built yet. The base, lid and gasket are 3D printed, two foam pads are cut from sheet, and the module, cell, charging receptacle, screws, spring bars and strap are bought; the electronics are four soldered wires and one small diode. Writing the plan made the design buildable: the spring bar holes, lid screws and strap notches were redesigned, and cell ribs, a glue collar for the charging receptacle and foam pads that let the lid clamp the stack were added (TRT-DDR-003, open for Amish's review). Every picture is drawn from the model, and the model checks that each part touches what it should and clears what it should not.
 
 ## Safety
 

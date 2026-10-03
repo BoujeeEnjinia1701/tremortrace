@@ -3,7 +3,7 @@ doc_id: TRT-REQ-001
 title: TremorTrace requirements
 project: TremorTrace
 doc_type: Requirements
-version: "0.5"
+version: "0.6"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -29,6 +29,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: 'Design for construction (TRT-DDR-003): R6 and R10 figures; budget as a value-engineering target'
+- version: "0.6"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'R10 cost restated with the Schottky diode (USD 43.79); no status changed'
 ---
 
 # TremorTrace requirements
@@ -48,7 +52,7 @@ Table 1. Requirements and TRL 3 status.
 | R7 | Skin-safe and wearable | Silicone or textile strap; no exposed electronics; splash resistant (IP54 target) | Design review | Not verifiable at TRL 3 |
 | R8 | Produce a daily tremor profile | Open notebook turning window summaries into a daily chart of tremor time, frequency and amplitude | Run on sample data | Not verifiable at TRL 3 |
 | R9 | Protect health data | Data stored locally and exported only by the owner; no cloud dependency | Design review | Met (design review) |
-| R10 | Low cost and buildable | Parts cost reported against the USD 150 value-engineering target; no custom PCB required for the first build | Priced BOM | Met: USD 43.69, USD 106.31 under the target |
+| R10 | Low cost and buildable | Parts cost reported against the USD 150 value-engineering target; no custom PCB required for the first build | Priced BOM | Met: USD 43.79, USD 106.21 under the target |
 | R11 | Clear status | Status LED on the band and the web Bluetooth page show battery, recording and sync state | Design review | Met (design review) |
 
 ## Assumptions

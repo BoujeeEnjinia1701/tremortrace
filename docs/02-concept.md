@@ -3,7 +3,7 @@ doc_id: TRT-PRC-001
 title: TremorTrace design precis
 project: TremorTrace
 doc_type: Design precis
-version: "0.6"
+version: "0.8"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -33,11 +33,19 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: 'Design for construction (TRT-DDR-003): lid screws, base features, mass and cost; budget as a value-engineering target'
+- version: "0.7"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: First partner and the activity-flag question answered by Amish's decisions of 2026-10-02 (TRT-DEC-001)
+- version: "0.8"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'Parts cost USD 43.79 with the Schottky diode (BOM line 12)'
 ---
 
 # TremorTrace design precis
 
-TremorTrace is a small wrist pod on a watch strap that records wrist motion all day, turns it into 10-second tremor summaries on the band, and hands them to an open notebook that draws a daily tremor profile. The TRL 3 calculations (TRT-CAL-001) show that one off-the-shelf module and a 150 mAh cell meet nine of eleven requirements for USD 43.69 in parts, including mass at 26.2 g against a 30 g limit with a textile strap; splash resistance and the notebook can only be verified with hardware and software work.
+TremorTrace is a small wrist pod on a watch strap that records wrist motion all day, turns it into 10-second tremor summaries on the band, and hands them to an open notebook that draws a daily tremor profile. The TRL 3 calculations (TRT-CAL-001) show that one off-the-shelf module and a 150 mAh cell meet nine of eleven requirements for USD 43.79 in parts, including mass at 26.2 g against a 30 g limit with a textile strap; splash resistance and the notebook can only be verified with hardware and software work.
 
 ![Hero render](../media/hero.png)
 
@@ -85,7 +93,7 @@ Table 2. Key numbers at TRL 3.
 | On-band history | 9.7 days | R5 (7 days) met |
 | Pod size | 40 x 30 x 12 mm | R6 size met |
 | Mass | 26.2 g with textile strap | R6 (30 g) met, 3.8 g margin |
-| Parts cost | USD 43.69, USD 106.31 under the USD 150 value-engineering target | R10 met |
+| Parts cost | USD 43.79, USD 106.21 under the USD 150 value-engineering target | R10 met |
 
 The general arrangement is drawing TRT-DWG-002 (`cad/drawings/TRT-DWG-002.pdf`), Rev P3. How to build the prototype is in the build plan TRT-BLD-001 (`docs/05-build-plan.md`); the changes that made the design buildable are in TRT-DDR-003.
 
@@ -109,9 +117,9 @@ The general arrangement is drawing TRT-DWG-002 (`cad/drawings/TRT-DWG-002.pdf`),
 
 ## Open questions
 
-- The activity flag marks tremor during a reach as activity in synthetic data (TRT-CAL-001, section 4). How well can action tremor be separated from voluntary movement with 10 s summaries?
+- The activity flag marks tremor during a reach as activity in synthetic data (TRT-CAL-001, section 4). How well can action tremor be separated from voluntary movement with 10 s summaries? Decided by Amish, 2026-10-02: keep the flag, report tremor with and without it, and choose a classifier at TRL 4 from recorded data.
 - Confirm the IMU sample-rate tolerance, the module's run current and the textile strap mass.
-- First clinical or patient partner for co-design and eventual validation. Proposed, awaiting Amish.
+- First clinical or patient partner for co-design and eventual validation. Decided by Amish, 2026-10-02 (TRT-DEC-001): the first candidate to approach is an academic movement disorders clinic with its own ethics board, introduced through the OpenRatio network, with the International Essential Tremor Foundation as the route to participants, shared with StillBand and SteadySleeve; not yet approached.
 
 Open decisions are tracked in the design decisions register, TRT-DEC-001 (`docs/06-design-decisions.md`).
 

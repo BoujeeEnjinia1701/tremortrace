@@ -62,6 +62,7 @@ MASS_BOUGHT_G = {                    # g
     "Charging connector receptacle (assumed)": 1.0,
     "Spring bars, 2 (assumed)": 0.6,
     "M2 x 6 countersunk screws, 4 (assumed)": 0.6,       # four, one per lug horn (TRT-DDR-003)
+    "Schottky diode, SOD-123 (assumed)": 0.02,                 # line 12, receptacle positive lead (TRT-DDR-003 A2)
     "Wire, two foam pads, light pipe, epoxy (assumed)": 1.0,  # upper foam pad and epoxy added (TRT-DDR-003)
 }
 

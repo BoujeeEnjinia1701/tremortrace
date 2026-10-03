@@ -10,3 +10,4 @@ item,qty,spec,supplier,unit_cost_usd,make_buy,notes
 9 Lid screws,4,"M2 x 6 countersunk thread-forming for plastics, stainless",Fastener supplier,0.25,buy,One in each lug horn (TRT-DDR-003; was 2 x M2 x 6 pan head on the centre line). Indicative price
 10 Light pipe,1,"2 mm clear acrylic rod, 2 mm long",Plastics or electronics supplier,0.50,buy,Indicative price
 11 Consumables,1,"Two foam pads (0.5 mm adhesive, 2 mm closed-cell), polyimide tape, 26 AWG silicone wire, heat shrink, two-part epoxy",Electronics supplier,2.00,buy,Indicative allowance
+Schottky diode,1,"Schottky diode, SOD-123, 1 A, 30 V or higher, forward drop 0.4 V or less at 50 mA (SS14 class)",Electronics distributor,0.10,buy,"In the charging receptacle's positive lead, on every band (TRT-DDR-003 A2, decided 2026-10-02). A few cents each in volume; USD 0.10 allowance for a single buy. Glued to the base floor beside the receptacle collar."

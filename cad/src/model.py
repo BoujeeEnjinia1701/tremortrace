@@ -43,6 +43,10 @@ PARAMS = {
     "foam_t": 0.5,            # adhesive foam pad between cell and module
     "top_foam_t": 1.7,        # foam pad between module and lid, compressed (DDR-003 C5; cut from 2 mm)
     "pogo": (4.0, 8.0, 3.0),  # magnetic 2-pin charging receptacle, X, Y, Z
+    "diode": (1.6, 2.7, 1.1),  # Schottky diode, SOD-123 body, X, Y, Z (decided 2026-10-02, TRT-DDR-003 A2)
+    "diode_y": 8.5,           # diode centre across the wrist, beside the receptacle collar, on the base floor
+    "mark_depth": 0.4,        # lid mark debossed into the lid (two 0.2 mm layers, decided 2026-10-02)
+    "mark_w": 0.6,            # line width of the mark
     "led_d": 2.0,             # light pipe bore in the lid
     "pipe_len": 2.0,          # light pipe length (top flush with the lid)
     "led_hole_d": 4.0,        # hole in the top foam pad round the LED and light pipe
@@ -104,6 +108,36 @@ def _rbox(x, y, h, r, z0, cx=0.0, cy=0.0):
     return b.fillet(s.edges().filter_by(b.Axis.Z), r)
 
 
+def mark_points(n=26):
+    """Centre line of the tremor-trace mark on the lid (x, y in mm): a short decaying wave."""
+    import math
+    pts = []
+    for k in range(n + 1):
+        x = -9.0 + 18.0 * k / n
+        amp = 2.4 * math.exp(-((x + 1.0) / 6.0) ** 2)
+        pts.append((x, 4.0 + amp * math.sin(2 * math.pi * (x + 9.0) / 4.5)))
+    return pts
+
+
+def _mark_cutter(p, top):
+    """Solid that is removed from the lid top to deboss the mark."""
+    import math
+    b = _b()
+    pts = mark_points()
+    d, w = p["mark_depth"], p["mark_w"]
+    segs = []
+    for (x0, y0), (x1, y1) in zip(pts[:-1], pts[1:]):
+        L = math.hypot(x1 - x0, y1 - y0)
+        ang = math.degrees(math.atan2(y1 - y0, x1 - x0))
+        segs.append(b.Pos((x0 + x1) / 2, (y0 + y1) / 2, top - d / 2 + 0.05) * b.Rot(0, 0, ang) * b.Box(L + 0.01, w, d + 0.1))
+        segs.append(b.Pos(x1, y1, top - d / 2 + 0.05) * b.Cylinder(w / 2, d + 0.1))
+    segs.append(b.Pos(pts[0][0], pts[0][1], top - d / 2 + 0.05) * b.Cylinder(w / 2, d + 0.1))
+    out = segs[0]
+    for sg in segs[1:]:
+        out = out + sg
+    return out
+
+
 def build_parts(params=None):
     """Return a dict of named build123d solids for the assembly."""
     b = _b()
@@ -159,6 +193,9 @@ def build_parts(params=None):
         lid -= Pos(x, y, top + 0.25) * Cylinder(hr, 0.5)
     led_xy = (0.0, -p["module"][1] / 2 + 4.0)
     lid -= Pos(led_xy[0], led_xy[1], lz + p["lid_t"] / 2) * Cylinder(p["led_d"] / 2, p["lid_t"] + 1)
+    # Tremor-trace mark: a short decaying wave debossed into the lid top (appearance in product_model.py)
+    mark = _mark_cutter(p, top)
+    lid -= mark
 
     # Screws: countersunk head in the lid seat, shank at core diameter in the pilot hole
     screws = None
@@ -180,6 +217,9 @@ def build_parts(params=None):
     top_foam = Pos(0, 0, p["mod_top"] + tf / 2) * Box(mx - 1.8, my - 2.0, tf)
     top_foam -= Pos(led_xy[0], led_xy[1], p["mod_top"] + tf / 2) * Cylinder(p["led_hole_d"] / 2, tf + 1)
     pogo = Pos(p["pogo_cx"], 0, pz / 2) * Box(px, py, pz)
+    # Schottky diode in the receptacle's positive lead: lies on the floor beside the collar, long side across the wrist
+    dx_, dy_, dz_ = p["diode"]
+    diode = Pos(p["pogo_cx"], p["diode_y"], p["floor"] + dz_ / 2) * Box(dx_, dy_, dz_)
 
     # Spring bars: body between the horns, tips into the horn holes
     bars = None
@@ -209,10 +249,10 @@ def build_parts(params=None):
 
     return {"strap": strap, "lid": lid, "module": module, "cell": cell, "base": base,
             "pogo": pogo, "gasket": gasket, "bars": bars, "screws": screws, "pipe": pipe,
-            "foam": foam, "top_foam": top_foam, "_p": p, "_led": led_xy}
+            "foam": foam, "top_foam": top_foam, "diode": diode, "_mark": mark, "_p": p, "_led": led_xy}
 
 
-POD_KEYS = ("base", "gasket", "lid", "screws", "pipe", "cell", "foam", "module", "top_foam", "pogo", "bars")
+POD_KEYS = ("base", "gasket", "lid", "screws", "pipe", "cell", "foam", "module", "top_foam", "pogo", "diode", "bars")
 
 
 def build(params=None):
@@ -270,6 +310,14 @@ def checks(params=None):
     chk("Strap looped on the spring bars", "strap", "bars", "touch")
     chk("Strap clear of the base (notch faces and horns)", "strap", "base", 0.15)
     chk("Strap clear of the charging receptacle", "strap", "pogo", 1.0)
+    chk("Diode lies on the base floor", "diode", "base", "touch")
+    chk("Diode clear of the charging receptacle (lead run 3 mm or more)", "diode", "pogo", 3.0)
+    chk("Diode clear of the module", "diode", "module", 1.0)
+    chk("Diode clear of the cell", "diode", "cell", 1.0)
+    chk("Diode clear of the upper foam pad", "diode", "top_foam", 1.0)
+    chk("Diode clear of the lid", "diode", "lid", 1.0)
+    chk("Lid mark clear of the light pipe bore", "_mark", "pipe", 1.0)
+    chk("Lid mark clear of the screw seats", "_mark", "screws", 1.0)
     # The cell sits in its pocket with a stated clearance to every rib and wall
     b = _b()
     p = P["_p"]
@@ -278,6 +326,8 @@ def checks(params=None):
     pocket = P["base"] & ring
     rows.append(("Cell pocket: ribs and wall 0.3 mm from the cell", pocket.volume if pocket else 0.0,
                  p["cell_gap"], 0.3, (pocket.volume if pocket else 0.0) < 1e-3))
+    ok = p["lid_t"] - p["mark_depth"] >= 1.0
+    rows.append(("Lid keeps 1.0 mm or more under the 0.4 mm deboss", 0.0, p["lid_t"] - p["mark_depth"], 1.0, ok))
     # Bars must not be able to slide out: body longer than the hole diameter allows
     ok = p["bar_body_d"] > p["bar_d"] + 0.3
     rows.append(("Spring bar body cannot enter the 1.0 mm tip hole", 0.0, p["bar_body_d"] - p["bar_d"], 0.3, ok))
